@@ -8,7 +8,7 @@
     android:background="#1A1A1A">
 
     <TextView
-        android:id="@+id/playlistName"
+        android:id="@+id/playlistNameIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
@@ -31,10 +31,10 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playlistName" />
+        app:layout_constraintTop_toBottomOf="@+id/playlistNameIcon" />
 
     <fr.uge.soundroid.CustomView.MusicRectangleIcon
-        android:id="@+id/musicIcon"
+        android:id="@+id/playlistIcon"
         android:layout_width="700dp"
         android:layout_height="700dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -54,7 +54,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/musicIcon" />
+        app:layout_constraintTop_toBottomOf="@+id/playlistIcon" />
 
     <TextView
         android:id="@+id/musicArtist"
@@ -69,7 +69,7 @@
         app:layout_constraintTop_toBottomOf="@+id/musicName" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/backArrow"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginStart="24dp"
@@ -79,7 +79,7 @@
         app:srcCompat="@drawable/back" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/configButton"
         android:layout_width="24dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -89,7 +89,7 @@
         app:srcCompat="@drawable/config" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/playButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="36dp"
@@ -99,22 +99,22 @@
         app:srcCompat="@drawable/play" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/newtButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="64dp"
         android:layout_marginTop="36dp"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintStart_toEndOf="@+id/playButton"
         app:layout_constraintTop_toBottomOf="@+id/musicArtist"
         app:srcCompat="@drawable/next" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/prevButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="64dp"
-        app:layout_constraintEnd_toStartOf="@+id/imageView4"
+        app:layout_constraintEnd_toStartOf="@+id/playButton"
         app:layout_constraintTop_toBottomOf="@+id/musicArtist"
         app:srcCompat="@drawable/prev" />
 
@@ -127,10 +127,10 @@
         android:progressDrawable="@drawable/seek_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        app:layout_constraintTop_toBottomOf="@+id/playButton" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/actualTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -142,7 +142,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/endTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -163,7 +163,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/likeButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -173,24 +173,24 @@
         app:srcCompat="@drawable/like" />
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/loopButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView7"
+        app:layout_constraintEnd_toStartOf="@+id/likeButton"
         app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/downApp"
         app:srcCompat="@drawable/loop" />
 
     <ImageView
-        android:id="@+id/imageView9"
+        android:id="@+id/aleaButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/downApp"
         app:layout_constraintHorizontal_bias="0.65"
-        app:layout_constraintStart_toEndOf="@+id/imageView7"
+        app:layout_constraintStart_toEndOf="@+id/likeButton"
         app:layout_constraintTop_toTopOf="@+id/downApp"
         app:srcCompat="@drawable/alea" />
 

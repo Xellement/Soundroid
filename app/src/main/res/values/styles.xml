@@ -8,15 +8,4 @@
         <item name="colorAccent">#ffffff</item>
     </style>
 
-    <style name="CustomProgressBarHorizontal" parent="android:Widget.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal</item>
-        <item name="android:minHeight">10dp</item>
-        <item name="android:maxHeight">500dp</item>
-    </style>
-
-    <style name="test" parent="Theme.AppCompat.Light">
-        <item name="android:colorControlActivated" tools:targetApi="lollipop">#666666</item>
-        <item name="android:colorControlNormal" tools:targetApi="lollipop">#ffffff</item>
-    </style>
-
 </resources>
