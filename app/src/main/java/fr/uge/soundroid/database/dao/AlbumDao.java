@@ -1,4 +1,4 @@
-package fr.uge.soundroid.database;
+package fr.uge.soundroid.database.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -8,7 +8,10 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import fr.uge.soundroid.database.entity.Album;
+
 @Dao
+public
 interface AlbumDao {
     @Query("SELECT * FROM album")
     List<Album> getALl();

@@ -1,12 +1,13 @@
-package fr.uge.soundroid.database;
+package fr.uge.soundroid.database.dao;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import java.util.List;
+
+import fr.uge.soundroid.database.entity.Artist;
 
 @Dao
 public interface ArtistDao {
@@ -19,6 +20,6 @@ public interface ArtistDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     void insert(Artist artist);
 
-    @Delete
-    void delete(Artist artist);
+    @Query("DELETE FROM artist WHERE artistId=:id")
+    int delete(int id);
 }
