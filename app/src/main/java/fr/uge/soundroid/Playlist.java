@@ -1,18 +1,17 @@
 package fr.uge.soundroid;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 
 import java.util.ArrayList;
 
 public class Playlist {
 
     private String name;
+    private int color;
 
-    private transient Bitmap cachedBitmap;
-
-    public Playlist(String name) {
+    public Playlist(String name, int color) {
         this.name = name;
+        this.color = color;
     }
 
     public String getName() {
@@ -23,10 +22,10 @@ public class Playlist {
      * Methode Test GUI
      * @return
      */
-    public static ArrayList<Playlist> createPlaylistsList() {
-        ArrayList<Playlist> playlists = new ArrayList<Playlist>();
-        for (int i = 1; i <= 10; i++)
-            playlists.add(new Playlist("Playlit n°"+i));
+    public static ArrayList<Playlist> createPlaylistsList(int color, int size) {
+        ArrayList<Playlist> playlists = new ArrayList<>();
+        for (int i = 1; i <= size; i++)
+            playlists.add(new Playlist("Playlit n°"+i, color));
         return playlists;
     }
 

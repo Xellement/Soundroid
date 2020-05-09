@@ -1,14 +1,16 @@
-package fr.uge.soundroid;
+package fr.uge.soundroid.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class PlayerActivity extends AppCompatActivity {
+import fr.uge.soundroid.R;
+
+public class PlaylistActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_player);
+        setContentView(R.layout.activity_playlist);
     }
 }

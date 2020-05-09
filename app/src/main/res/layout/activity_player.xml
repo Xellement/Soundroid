@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayerActivity"
+    tools:context=".activity.PlayerActivity"
     android:background="#1A1A1A">
 
     <TextView
@@ -33,15 +33,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playlistNameIcon" />
 
-    <fr.uge.soundroid.CustomView.MusicRectangleIcon
+    <fr.uge.soundroid.customView.MusicRectangleIcon
         android:id="@+id/playlistIcon"
-        android:layout_width="700dp"
-        android:layout_height="700dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playlistSize"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
     <TextView
         android:id="@+id/musicName"
@@ -69,7 +68,7 @@
         app:layout_constraintTop_toBottomOf="@+id/musicName" />
 
     <ImageView
-        android:id="@+id/backArrow"
+        android:id="@+id/backArrowPlayer"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginStart="24dp"
@@ -79,7 +78,7 @@
         app:srcCompat="@drawable/back" />
 
     <ImageView
-        android:id="@+id/configButton"
+        android:id="@+id/configButtonPlayer"
         android:layout_width="24dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -193,5 +192,19 @@
         app:layout_constraintStart_toEndOf="@+id/likeButton"
         app:layout_constraintTop_toTopOf="@+id/downApp"
         app:srcCompat="@drawable/alea" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.57" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
