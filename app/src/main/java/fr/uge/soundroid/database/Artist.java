@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Artist {
     @PrimaryKey(autoGenerate = true)
-    public int artistId;
+    public int id;
 
     @ColumnInfo(name = "name")
     public String artistName;
