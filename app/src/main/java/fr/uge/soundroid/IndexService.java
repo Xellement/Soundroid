@@ -25,8 +25,6 @@ public class IndexService {
                 addMusicFilesFrom(file.getAbsolutePath());
             } else if (file.isFile() && file.getPath().endsWith(".mp3")) {
                 musicFilesList.add(file.getAbsolutePath());
-            } else {
-                // log something ?
             }
         }
     }
