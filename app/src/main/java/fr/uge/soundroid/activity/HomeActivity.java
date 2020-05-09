@@ -2,6 +2,9 @@ package fr.uge.soundroid.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -17,26 +20,41 @@ import fr.uge.soundroid.R;
 public class HomeActivity extends AppCompatActivity {
 
     private ArrayList<Playlist> playlists, favoris;
+    private RecyclerView playlistRV, favorisRV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        RecyclerView playlistRV = findViewById(R.id.recyclerPlaylist);
-        playlists = Playlist.createPlaylistsList(Color.rgb(45, 45, 107), 15);
+        playlists = Playlist.createPlaylistsList(15, "playlist_icon.png", "Playlist");
+        favoris = Playlist.createFavorisList();
 
+        playlistRV = findViewById(R.id.recyclerPlaylist);
         PlaylistAdapter adapter = new PlaylistAdapter(playlists);
-
         playlistRV.setAdapter(adapter);
-        playlistRV.setLayoutManager(new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false));
+        updateLayoutManager(playlistRV);
 
-        RecyclerView favorisRV = findViewById(R.id.recyclerFavoris);
-
-        PlaylistAdapter adapterFav = new PlaylistAdapter(playlists);
-
+        favorisRV = findViewById(R.id.recyclerFavoris);
+        PlaylistAdapter adapterFav = new PlaylistAdapter(favoris);
         favorisRV.setAdapter(adapterFav);
-        favorisRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        llm.scrollToPositionWithOffset(0, -1);
+        favorisRV.setLayoutManager(llm);
+        adapterFav.setOnItemClickListener(new PlaylistAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Playlist p = favoris.get(position);
+                playlists = Playlist.createPlaylistsList(15, p.getPathIcon(), p.getName());
+                TextView tv = findViewById(R.id.title);
+                tv.setText(p.getName());
+                playlistRV.setAdapter(new PlaylistAdapter(playlists));
+            }
+        });
 
+    }
+
+    private void updateLayoutManager(RecyclerView rv) {
+        rv.setLayoutManager(new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false));
     }
 }
