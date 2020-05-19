@@ -15,6 +15,13 @@ public class Artist {
     @ColumnInfo(name = "name")
     public String artistName;
 
+    public Artist() {
+    }
+
+    public Artist(String name) {
+        artistName = name;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (! (obj instanceof Artist)) {

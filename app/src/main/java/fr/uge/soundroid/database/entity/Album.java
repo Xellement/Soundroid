@@ -16,6 +16,18 @@ public class Album {
     @ColumnInfo(name = "nb_songs")
     public int nbSongs;
 
+    public Album() {
+    }
+
+    public Album(String title, int nbSongs) {
+        albumTitle = title;
+        this.nbSongs = nbSongs;
+    }
+
+    public Album(String title) {
+        this(title, 0);
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (! (obj instanceof Album)) {
