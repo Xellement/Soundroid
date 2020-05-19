@@ -17,11 +17,11 @@ public interface SongDao {
     @Query("SELECT * FROM song WHERE title=:title")
     Song findByName(String title);
 
-    @Query("SELECT songId, song.title, duration, tag, mark, artist_id, album_id" +
+    @Query("SELECT songId, song.title, duration, tag, liked, artist_id, album_id" +
             " FROM song, artist where song.artist_id=artistId AND artist.name=:artistName")
     List<Song> findByArtist(String artistName);
 
-    @Query("SELECT songId, song.title, duration, tag, mark, artist_id, album_id" +
+    @Query("SELECT songId, song.title, duration, tag, liked, artist_id, album_id" +
             " FROM song, album where song.album_id=album.albumId AND album.title=:albumTitle")
     List<Song> findByAlbum(String albumTitle);
 
@@ -30,4 +30,7 @@ public interface SongDao {
 
     @Delete
     void delete(Song song);
+
+    @Query("SELECT * from song WHERE artist_id IS NULL")
+    List<Song> getNullRef();
 }
