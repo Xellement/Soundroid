@@ -14,7 +14,7 @@ import fr.uge.soundroid.database.entity.Album;
 public
 interface AlbumDao {
     @Query("SELECT * FROM album")
-    List<Album> getALl();
+    List<Album> getAll();
 
     @Query("SELECT * from album where title=:title")
     Album findByName(String title);
