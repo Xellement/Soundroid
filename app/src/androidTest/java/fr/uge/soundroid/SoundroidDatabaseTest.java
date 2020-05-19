@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
 import java.util.List;
 
 import fr.uge.soundroid.database.SoundroidDatabase;
@@ -27,20 +26,15 @@ public class SoundroidDatabaseTest {
     private SoundroidDatabase db;
 
     private static Artist provideArtist() {
-        Artist a = new Artist();
-        a.artistName = "Johnny";
-        return a;
+        return new Artist("Johnny");
     }
     private static Album provideAlbum() {
-        Album a= new Album();
-        a.albumTitle = "Time after time";
-        a.nbSongs = 15;
-        return a;
+        return new Album("Time after time", 15);
     }
     private static Song provideSong() {
         Song song = new Song();
         song.songTitle = "Crying";
-        song.songMark = 5;
+        song.liked = true;
         song.songTag = "song";
         song.songDuration = 180;
         return song;
@@ -53,12 +47,12 @@ public class SoundroidDatabaseTest {
     }
 
     @After
-    public void closeDb() throws IOException {
+    public void closeDb() {
         db.close();
     }
 
     @Test
-    public void writeArtistAndRead() throws IOException {
+    public void writeArtistAndRead(){
         Artist artist = provideArtist();
         db.artistDao().insert(artist);
 
@@ -93,5 +87,58 @@ public class SoundroidDatabaseTest {
         assertEquals(song, byName);
         assertTrue(byAlbum.contains(song));
         assertTrue(byArtist.contains(song));
+    }
+
+    @Test
+    public void writeAlbumAndDelete() {
+        Album album = provideAlbum();
+
+        assertTrue(db.albumDao().getAll().isEmpty());
+        db.albumDao().insert(album);
+
+        Album byName = db.albumDao().findByName(album.albumTitle);
+        assertEquals(byName, album);
+
+        db.albumDao().delete(byName);
+        assertTrue(db.albumDao().getAll().isEmpty());
+    }
+
+    @Test
+    public void writeAndDeleteArtist() {
+        Artist artist = provideArtist();
+
+        assertTrue(db.artistDao().getAll().isEmpty());
+        db.artistDao().insert(artist);
+
+        Artist byName = db.artistDao().findByName(artist.artistName);
+        assertEquals(byName, artist);
+
+        db.artistDao().delete(byName);
+        assertTrue(db.artistDao().getAll().isEmpty());
+    }
+
+    @Test
+    public void writeAndDeleteSong() {
+        Artist artist = provideArtist();
+        Album album = provideAlbum();
+        db.artistDao().insert(artist);
+        db.albumDao().insert(album);
+
+        Song song = provideSong();
+        song.songArtistId = db.artistDao().findByName(artist.artistName).artistId;
+        song.songAlbumId = db.albumDao().findByName(album.albumTitle).albumId;
+
+        assertTrue(db.songDao().getAll().isEmpty());
+        db.songDao().insert(song);
+        Song byName = db.songDao().findByName(song.songTitle);
+        assertEquals(byName, song);
+
+        db.songDao().delete(song);
+        db.artistDao().delete(artist);
+        byName = db.songDao().findByName(song.songTitle);
+        // CA SUPPRIME PAS PUTAIN --> pb de foreign key
+        assertEquals(byName.songAlbumId, db.albumDao().findByName(album.albumTitle).albumId);
+        assertTrue(db.artistDao().getAll().contains(artist));
+        assertTrue(db.songDao().getAll().contains(song));
     }
 }
