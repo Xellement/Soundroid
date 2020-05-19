@@ -1,6 +1,7 @@
 package fr.uge.soundroid.database.dao;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -20,6 +21,6 @@ public interface ArtistDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     void insert(Artist artist);
 
-    @Query("DELETE FROM artist WHERE artistId=:id")
-    int delete(int id);
+    @Delete()
+    void delete(Artist artist);
 }
