@@ -7,7 +7,6 @@ import android.util.Log;
 
 import java.io.File;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -24,7 +23,9 @@ public class IndexService {
     }
 
     public void addMusicFilesFromRoot() throws NoSuchAlgorithmException {
+        songDao.deleteAll();
         addMusicFilesFrom(Environment.getExternalStoragePublicDirectory("").getAbsolutePath());
+        Log.d("Song list", songDao.getAll().toString());
     }
 
     private void addMusicFilesFrom(String dirPath) throws NoSuchAlgorithmException {
@@ -44,17 +45,11 @@ public class IndexService {
                 final String genre = mtr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
                 final String duration = mtr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
 
-//                final String total = title + artist + album + duration;
-//                final byte[] encodedHash = MessageDigest.getInstance("MD5").digest(total.getBytes());
-//                final ByteBuffer bb = ByteBuffer.allocate(encodedHash.length);
-//                bb.put(encodedHash);
-//                bb.flip();
-//
-//                final String hash = StandardCharsets.UTF_8.decode(bb).toString();
+                String s = title + artist + album + genre + duration;
+                final String songHash = String.valueOf(s.hashCode());
 
-                songDao.insert(new Song(title, Long.parseLong(duration), null, artist, album, null));
+                songDao.insert(new Song(title, Long.parseLong(duration), null, artist, album, songHash));
             }
         }
-        Log.d("Song list", songDao.getAll().toString());
     }
 }

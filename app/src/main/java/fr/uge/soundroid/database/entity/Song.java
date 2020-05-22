@@ -58,6 +58,6 @@ public class Song {
     @NonNull
     @Override
     public String toString() {
-        return "[ Title: " + songTitle + "; Artist: " + artistName + "; Album: " + albumName + "; Duration: " + songDuration + "; Hash: " + songHash + " ]";
+        return "[ Title: " + songTitle + "; Artist: " + artistName + "; Album: " + albumName + "; Duration: " + songDuration + "ms; Hash: " + songHash + " ]";
     }
 }

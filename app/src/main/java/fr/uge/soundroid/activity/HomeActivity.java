@@ -86,11 +86,18 @@ public class HomeActivity extends AppCompatActivity {
         favorisRV.setAdapter(adapterFav);
         favorisRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        IndexService indexService = new IndexService(getApplication());
-        try {
-            indexService.addMusicFilesFromRoot();
-        } catch (NoSuchAlgorithmException e) {
-            Log.e("Algorithm not found", "MD5 algorithm not found");
-        }
+
+        Thread index = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                IndexService indexService = new IndexService(HomeActivity.this.getApplication());
+                try {
+                    indexService.addMusicFilesFromRoot();
+                } catch (NoSuchAlgorithmException e) {
+                    Log.e("Algorithm not found", "MD5 algorithm not found");
+                }
+            }
+        });
+        index.start();
     }
 }

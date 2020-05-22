@@ -15,6 +15,9 @@ public interface SongDao {
     @Query("SELECT * FROM song")
     List<Song> getAll();
 
+    @Query("DELETE FROM song WHERE songId > 0")
+    void deleteAll();
+
     @Query("SELECT * FROM song WHERE title=:title")
     Song findByName(String title);
 
