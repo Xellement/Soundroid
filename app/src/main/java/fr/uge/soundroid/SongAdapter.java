@@ -11,18 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
+import fr.uge.soundroid.database.entity.Song;
 
-    private List<Music> musics;
+public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>{
+
+    private List<Song> musics;
 
     // Define listener member variable
-    private MusicAdapter.OnItemClickListener listener;
+    private SongAdapter.OnItemClickListener listener;
     // Define the listener interface
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
     }
     // Define the method that allows the parent activity or fragment to define the listener
-    public void setOnItemClickListener(MusicAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(SongAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -50,7 +52,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
             });
         }
 
-        private void update(Music m) {
+        private void update(Song m) {
             musicName.setText(m.getMusicName());
             musicArtist.setText(m.getArtist());
             iconMusic.setImageBitmap(m.getBitmapIcon(iconMusic.getContext()));
@@ -61,8 +63,12 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
         public void onClick(View v) {}
     }
 
-    public MusicAdapter(List<Music> l){
+    public SongAdapter(List<Song> l){
         super();
+        musics = l;
+    }
+
+    public void setMusicList(List<Song> l) {
         musics = l;
     }
 
