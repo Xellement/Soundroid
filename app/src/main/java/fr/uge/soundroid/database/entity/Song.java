@@ -1,0 +1,44 @@
+package fr.uge.soundroid.database.entity;
+
+import androidx.annotation.Nullable;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
+public class Song {
+
+    @PrimaryKey(autoGenerate = true)
+    public long songId;
+
+    @ColumnInfo(name="title")
+    public String songTitle;
+
+    @ColumnInfo(name="duration")
+    public long songDuration;
+
+    @ColumnInfo(name="tag")
+    public String songTag;
+
+    @ColumnInfo(name="liked")
+    public boolean liked;
+
+    @ColumnInfo(name = "artist_name")
+    public String artistName;
+
+    @ColumnInfo(name = "album_name")
+    public String albumName;
+
+    @ColumnInfo(name = "hash")
+    public String hash;
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (! (obj instanceof Song)) {
+            return false;
+        }
+        Song s = (Song) obj;
+        return s.songTitle.equals(songTitle) && s.songDuration == songDuration &&
+                s.artistName.equals(artistName) && s.albumName.equals(albumName);
+    }
+}
