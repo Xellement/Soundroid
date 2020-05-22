@@ -32,14 +32,18 @@ public class Song {
     @ColumnInfo(name = "hash")
     public String hash;
 
+    @ColumnInfo(name = "path")
+    public String path;
+
     public Song() {}
 
-    public Song(String title, long duration, String tag, String artist, String album) {
+    public Song(String title, long duration, String tag, String artist, String album, String path) {
         songTitle = title;
         songDuration = duration;
         songTag = tag;
         artistName = artist;
         albumName = album;
+        this.path = path;
         liked = false;
     }
 
