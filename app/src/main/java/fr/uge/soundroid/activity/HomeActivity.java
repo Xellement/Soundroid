@@ -116,8 +116,6 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
 
         Thread index = new Thread(new Runnable() {
             @Override
@@ -131,6 +129,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         index.start();
+
+    }
 
     private void setPlaylistListenerClick(PlaylistAdapter adap){
         adap.setOnItemClickListener(new PlaylistAdapter.OnItemClickListener(){
