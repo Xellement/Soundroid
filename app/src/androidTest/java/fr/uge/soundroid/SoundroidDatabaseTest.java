@@ -86,7 +86,7 @@ public class SoundroidDatabaseTest {
 
     @Test
     public void createSongAndLikeIt() throws InterruptedException {
-        Song song = new Song("Crying", 120, "music", "Johnny", "Time after Time");
+        Song song = new Song("Crying", 120, "music", "Johnny", "Time after Time", null, null);
         song.songId = db.songDao().insert(song);
 
         assertFalse(song.liked);
@@ -99,10 +99,10 @@ public class SoundroidDatabaseTest {
 
     @Test
     public void createAndGetPlaylist() throws InterruptedException {
-        Song song = new Song("Crying", 120, "music", "Johnny", "Time after Time");
+        Song song = new Song("Crying", 120, "music", "Johnny", "Time after Time", null, null);
         song.songId = db.songDao().insert(song);
 
-        Song song2 = new Song("Wait", 150, "mucis", "Lennon", "Imagination");
+        Song song2 = new Song("Wait", 150, "mucis", "Lennon", "Imagination", null, null);
         song2.songId = db.songDao().insert(song2);
 
         Playlist playlist = new Playlist("playlist1");
