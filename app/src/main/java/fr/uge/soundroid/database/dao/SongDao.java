@@ -1,5 +1,6 @@
 package fr.uge.soundroid.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -13,24 +14,24 @@ import fr.uge.soundroid.database.entity.Song;
 @Dao
 public interface SongDao {
     @Query("SELECT * FROM song")
-    List<Song> getAll();
+    LiveData<List<Song>> getAll();
 
     @Query("SELECT * FROM song WHERE title=:title")
-    Song findByName(String title);
+    LiveData<Song> findByName(String title);
 
     @Query("SELECT * FROM song WHERE songId = :id")
-    Song findById(long id);
+    LiveData<Song> findById(long id);
 
     @Query("SELECT * FROM song WHERE title LIKE '%' || :title || '%'")
-    List<Song> findLikeName(String title);
+    LiveData<List<Song>> findLikeName(String title);
 
     @Query("SELECT songId, title, duration, tag, liked, artist_name, album_name" +
             " FROM song where song.artist_name LIKE '%' || :artistName || '%'")
-    List<Song> findByArtist(String artistName);
+    LiveData<List<Song>> findByArtist(String artistName);
 
     @Query("SELECT songId, title, duration, tag, liked, artist_name, album_name" +
             " FROM song where song.album_name LIKE '%' || :albumTitle || '%'")
-    List<Song> findByAlbum(String albumTitle);
+    LiveData<List<Song>> findByAlbum(String albumTitle);
 
     @Insert
     long insert(Song song);
