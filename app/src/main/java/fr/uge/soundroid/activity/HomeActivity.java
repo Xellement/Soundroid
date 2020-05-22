@@ -3,10 +3,12 @@ package fr.uge.soundroid.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import fr.uge.soundroid.IndexService;
@@ -83,7 +86,11 @@ public class HomeActivity extends AppCompatActivity {
         favorisRV.setAdapter(adapterFav);
         favorisRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        IndexService indexService = new IndexService();
-        indexService.addMusicFilesFromRoot();
+        IndexService indexService = new IndexService(getApplication());
+        try {
+            indexService.addMusicFilesFromRoot();
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("Algorithm not found", "MD5 algorithm not found");
+        }
     }
 }
