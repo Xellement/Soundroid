@@ -1,5 +1,6 @@
 package fr.uge.soundroid.database.entity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -30,20 +31,22 @@ public class Song {
     public String albumName;
 
     @ColumnInfo(name = "hash")
-    public String hash;
+    public String songHash;
 
     @ColumnInfo(name = "path")
     public String path;
 
     public Song() {}
 
-    public Song(String title, long duration, String tag, String artist, String album, String path) {
+
+    public Song(String title, long duration, String tag, String artist, String album, String hash, String path) {
         songTitle = title;
         songDuration = duration;
         songTag = tag;
         artistName = artist;
         albumName = album;
         this.path = path;
+        songHash = hash;
         liked = false;
     }
 
@@ -55,5 +58,11 @@ public class Song {
         Song s = (Song) obj;
         return s.songTitle.equals(songTitle) && s.songDuration == songDuration &&
                 s.artistName.equals(artistName) && s.albumName.equals(albumName);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "[ Title: " + songTitle + "; Artist: " + artistName + "; Album: " + albumName + "; Duration: " + songDuration + "ms; Hash: " + songHash + " ]";
     }
 }

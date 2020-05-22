@@ -16,6 +16,9 @@ public interface SongDao {
     @Query("SELECT * FROM song")
     LiveData<List<Song>> getAll();
 
+    @Query("DELETE FROM song")
+    void deleteAll();
+
     @Query("SELECT * FROM song WHERE title=:title")
     LiveData<Song> findByName(String title);
 
