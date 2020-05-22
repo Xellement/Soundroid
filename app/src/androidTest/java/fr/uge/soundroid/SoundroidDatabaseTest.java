@@ -7,6 +7,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -38,10 +39,15 @@ public class SoundroidDatabaseTest {
         return song;
     }
 
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+
     @Before
     public void createDb() {
         Context ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        db = Room.inMemoryDatabaseBuilder(ctx, SoundroidDatabase.class).build();
+        db = Room.inMemoryDatabaseBuilder(ctx, SoundroidDatabase.class)
+                .allowMainThreadQueries()
+                .build();
     }
 
     @After
@@ -49,49 +55,50 @@ public class SoundroidDatabaseTest {
         db.close();
     }
 
+
     @Test
-    public void writeSongAndRead() {
+    public void writeSongAndRead() throws InterruptedException {
         Song song = provideSong();
 
         db.songDao().insert(song);
 
-        Song byName = db.songDao().findByName("Crying");
-        List<Song> byAlbum = db.songDao().findByAlbum("Time after time");
-        List<Song> byArtist = db.songDao().findByArtist("Johnny");
+        Song byName = LiveDataTestUtil.getValue(db.songDao().findByName(song.songTitle));
+        List<Song> byAlbum = LiveDataTestUtil.getValue(db.songDao().findByAlbum(song.albumName));
+        List<Song> byArtist = LiveDataTestUtil.getValue(db.songDao().findByArtist("Johnny"));
         assertEquals(song, byName);
         assertTrue(byAlbum.contains(song));
         assertTrue(byArtist.contains(song));
     }
 
     @Test
-    public void writeAndDeleteSong() {
+    public void writeAndDeleteSong() throws InterruptedException {
         Song song = provideSong();
-        assertTrue(db.songDao().getAll().isEmpty());
+        assertTrue(LiveDataTestUtil.getValue(db.songDao().getAll()).isEmpty());
         song.songId = db.songDao().insert(song);
-        Song byName = db.songDao().findByName(song.songTitle);
+        Song byName = LiveDataTestUtil.getValue(db.songDao().findByName(song.songTitle));
         assertEquals(byName, song);
 
         db.songDao().delete(song);
-        byName = db.songDao().findByName(song.songTitle);
+        byName = LiveDataTestUtil.getValue(db.songDao().findByName(song.songTitle));
         assertNull(byName);
-        assertFalse(db.songDao().getAll().contains(song));
+        assertFalse(LiveDataTestUtil.getValue(db.songDao().getAll()).contains(song));
     }
 
     @Test
-    public void createSongAndLikeIt() {
+    public void createSongAndLikeIt() throws InterruptedException {
         Song song = new Song("Crying", 120, "music", "Johnny", "Time after Time");
         song.songId = db.songDao().insert(song);
 
         assertFalse(song.liked);
-        Song byName = db.songDao().findByName("Crying");
+        Song byName = LiveDataTestUtil.getValue(db.songDao().findByName("Crying"));
         assertFalse(byName.liked);
         byName.liked = true;
         db.songDao().update(byName);
-        assertTrue(db.songDao().findById(byName.songId).liked);
+        assertTrue(LiveDataTestUtil.getValue(db.songDao().findById(byName.songId)).liked);
     }
 
     @Test
-    public void createAndGetPlaylist() {
+    public void createAndGetPlaylist() throws InterruptedException {
         Song song = new Song("Crying", 120, "music", "Johnny", "Time after Time");
         song.songId = db.songDao().insert(song);
 
@@ -105,10 +112,10 @@ public class SoundroidDatabaseTest {
         playlistSongsJoin = new PlaylistSongsJoin(playlist.playlistId, song2.songId);
         db.playlistSongsJoinDao().insert(playlistSongsJoin);
 
-        List<Playlist> bySong = db.playlistSongsJoinDao().getPlaylistsFromSong(song.songId);
+        List<Playlist> bySong = LiveDataTestUtil.getValue(db.playlistSongsJoinDao().getPlaylistsFromSong(song.songId));
         assertTrue(bySong.size() == 1 && bySong.contains(playlist));
 
-        List<Song> byPlaylist = db.playlistSongsJoinDao().getSongsFromPlaylist(playlist.playlistId);
+        List<Song> byPlaylist = LiveDataTestUtil.getValue(db.playlistSongsJoinDao().getSongsFromPlaylist(playlist.playlistId));
         assertEquals(2, byPlaylist.size());
         assertTrue(byPlaylist.contains(song));
         assertTrue(byPlaylist.contains(song2));
