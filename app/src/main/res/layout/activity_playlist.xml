@@ -27,24 +27,49 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/config" />
 
-    <ScrollView
-        android:layout_width="409dp"
-        android:layout_height="689dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backArrowPlaylist">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            app:srcCompat="@drawable/playlist_icon" />
+
+        <TextView
+            android:id="@+id/playlistName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/montserrat"
+            android:text="Nom de la playlist"
+            android:textColor="#FDE6E6"
+            android:textSize="18sp" />
 
-            <fr.uge.soundroid.customView.PlaylistRectangleIcon
-                android:id="@+id/playlistRectangleIcon"
-                android:layout_width="200dp"
-                android:layout_height="200dp" />
-        </LinearLayout>
-    </ScrollView>
+        <TextView
+            android:id="@+id/playlistArtist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/montserrat"
+            android:text="Artiste"
+            android:textColor="#9A9494"
+            android:textSize="12sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
