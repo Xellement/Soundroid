@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="fr.uge.soundroid">
-=======
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.uge.soundroid">
->>>>>>> 8265f6c34e148ad05e39ceb5908619f712eb8511
+
 
     <application
         android:allowBackup="true"
@@ -13,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<<<<<<< HEAD
+
         <activity android:name=".activity.PlaylistActivity">
         </activity>
         <activity android:name=".activity.HomeActivity">
@@ -24,9 +21,7 @@
         </activity>
         <activity android:name=".activity.PlayerActivity">
         </activity>
-=======
-        <activity android:name=".database.entity.Song"></activity>
->>>>>>> 8265f6c34e148ad05e39ceb5908619f712eb8511
+        <!--<activity android:name=".database.entity.Song">
+        </activity>-->
     </application>
-
 </manifest>

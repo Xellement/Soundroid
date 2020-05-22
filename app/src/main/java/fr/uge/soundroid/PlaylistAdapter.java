@@ -37,12 +37,10 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Triggers click upwards to the adapter on click
                     if (listener != null) {
                         int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
+                        if (position != RecyclerView.NO_POSITION)
                             listener.onItemClick(itemView, position);
-                        }
                     }
                 }
             });
@@ -54,9 +52,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         }
 
         @Override
-        public void onClick(View v) {
-
-        }
+        public void onClick(View v) {}
     }
 
     public PlaylistAdapter(List<Playlist> l){
