@@ -9,7 +9,7 @@ import android.os.Bundle;
 import java.util.ArrayList;
 
 import fr.uge.soundroid.Music;
-import fr.uge.soundroid.MusicAdapter;
+import fr.uge.soundroid.SongAdapter;
 import fr.uge.soundroid.R;
 
 public class PlaylistActivity extends AppCompatActivity {
@@ -25,7 +25,7 @@ public class PlaylistActivity extends AppCompatActivity {
         musics = Music.createMusicsList(30);
 
         rv = findViewById(R.id.recyclerPlaylist);
-        MusicAdapter adapter = new MusicAdapter(musics);
+        SongAdapter adapter = new SongAdapter(musics);
         rv.setAdapter(adapter);
         updateLayoutManager(rv, 1);
     }

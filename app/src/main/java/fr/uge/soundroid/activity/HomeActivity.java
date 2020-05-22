@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -23,7 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import fr.uge.soundroid.Music;
-import fr.uge.soundroid.MusicAdapter;
+import fr.uge.soundroid.SongAdapter;
 import fr.uge.soundroid.IndexService;
 import fr.uge.soundroid.Playlist;
 import fr.uge.soundroid.PlaylistAdapter;
@@ -103,7 +101,7 @@ public class HomeActivity extends AppCompatActivity {
                 tv.setText(p.getName());
                 if (p.getName().equals("Récents") || p.getName().equals("Historique")) {
                     musics = Music.createMusicsList(15);
-                    MusicAdapter mscAdapter = new MusicAdapter(musics);
+                    SongAdapter mscAdapter = new SongAdapter(musics);
                     setMusicListenerClick(mscAdapter);
                     playlistRV.setAdapter(mscAdapter);
                     updateLayoutManager(playlistRV, 1);
@@ -142,8 +140,8 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private void setMusicListenerClick(MusicAdapter adap){
-        adap.setOnItemClickListener(new MusicAdapter.OnItemClickListener(){
+    private void setMusicListenerClick(SongAdapter adap){
+        adap.setOnItemClickListener(new SongAdapter.OnItemClickListener(){
             @Override
             public void onItemClick(View view, int position) {
                 TextView tv = findViewById(R.id.title);
