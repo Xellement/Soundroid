@@ -7,25 +7,21 @@ import androidx.room.Query;
 import java.util.List;
 
 import fr.uge.soundroid.database.entity.Playlist;
-import fr.uge.soundroid.database.entity.PlaylistSongsCrossRef;
+import fr.uge.soundroid.database.entity.PlaylistSongsJoin;
 import fr.uge.soundroid.database.entity.Song;
 
 @Dao
-public interface PlaylistSongsDao {
-//    @Transaction
-//    @Query("SELECT * FROM playlist")
-//    List<PlaylistSongs> getPlaylistWithSongs();
-
+public interface PlaylistSongsJoinDao {
     @Insert
-    void insert(PlaylistSongsCrossRef playlistSongsCrossRef);
+    long insert(PlaylistSongsJoin playlistSongsJoin);
 
     @Query("SELECT * FROM song " +
-            "INNER JOIN playlist_songs_crossref ON song.songId = playlist_songs_crossref.songId " +
-            "WHERE playlist_songs_crossref.playlistId = :playlistId")
-    List<Song> getSongsFromPlaylist(int playlistId);
+            "INNER JOIN playlist_songs_join ON song.songId = playlist_songs_join.songId " +
+            "WHERE playlist_songs_join.playlistId = :playlistId")
+    List<Song> getSongsFromPlaylist(long playlistId);
 
     @Query("SELECT * FROM playlist " +
-            "INNER JOIN playlist_songs_crossref ON playlist.playlistId = playlist_songs_crossref.playlistId " +
-            "WHERE playlist_songs_crossref.songId = :songId")
-    List<Playlist> getPlaylistsFromSong(int songId);
+            "INNER JOIN playlist_songs_join ON playlist.playlistId = playlist_songs_join.playlistId " +
+            "WHERE playlist_songs_join.songId = :songId")
+    List<Playlist> getPlaylistsFromSong(long songId);
 }
