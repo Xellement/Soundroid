@@ -6,6 +6,9 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import fr.uge.soundroid.database.dao.PlaylistDao;
 import fr.uge.soundroid.database.dao.PlaylistSongsJoinDao;
 import fr.uge.soundroid.database.dao.SongDao;
@@ -20,13 +23,15 @@ public abstract class SoundroidDatabase extends RoomDatabase {
     public abstract PlaylistSongsJoinDao playlistSongsJoinDao();
 
     private static SoundroidDatabase db;
+    public static final ExecutorService dbExecutor = Executors.newFixedThreadPool(4);
 
     public static SoundroidDatabase getDatabase(final Context ctx) {
         if (db == null) {
             synchronized (SoundroidDatabase.class) {
                 if (db == null) {
                     db = Room.databaseBuilder(ctx.getApplicationContext(),
-                        SoundroidDatabase.class, "soundroid_database").build();
+                        SoundroidDatabase.class, "soundroid_database")
+                            .build();
                 }
             }
         }
