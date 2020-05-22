@@ -15,6 +15,17 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
 
     private List<Music> musics;
 
+    // Define listener member variable
+    private MusicAdapter.OnItemClickListener listener;
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position);
+    }
+    // Define the method that allows the parent activity or fragment to define the listener
+    public void setOnItemClickListener(MusicAdapter.OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView musicName, musicArtist;
@@ -26,6 +37,17 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
             musicArtist = itemView.findViewById(R.id.MusicArtist);
             iconMusic = itemView.findViewById(R.id.iconMusic);
             iconLike = itemView.findViewById(R.id.iconLike);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION)
+                            listener.onItemClick(v, position);
+                    }
+                }
+            });
         }
 
         private void update(Music m) {
@@ -36,9 +58,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
         }
 
         @Override
-        public void onClick(View v) {
-
-        }
+        public void onClick(View v) {}
     }
 
     public MusicAdapter(List<Music> l){

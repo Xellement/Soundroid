@@ -38,7 +38,6 @@ public class Song {
 
     public Song() {}
 
-
     public Song(String title, long duration, String tag, String artist, String album, String hash, String path) {
         songTitle = title;
         songDuration = duration;

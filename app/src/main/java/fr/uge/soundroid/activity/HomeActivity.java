@@ -1,5 +1,6 @@
 package fr.uge.soundroid.activity;
 
+import android.content.Intent;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
@@ -82,11 +83,13 @@ public class HomeActivity extends AppCompatActivity {
 
         playlistRV = findViewById(R.id.mainRecycler);
         PlaylistAdapter adapter = new PlaylistAdapter(playlists);
+        setPlaylistListenerClick(adapter);
         playlistRV.setAdapter(adapter);
         updateLayoutManager(playlistRV, 3);
 
         favorisRV = findViewById(R.id.recyclerFavoris);
         PlaylistAdapter adapterFav = new PlaylistAdapter(favoris);
+        setPlaylistListenerClick(adapterFav);
         favorisRV.setAdapter(adapterFav);
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         llm.scrollToPositionWithOffset(0, -1);
@@ -100,16 +103,19 @@ public class HomeActivity extends AppCompatActivity {
                 tv.setText(p.getName());
                 if (p.getName().equals("Récents") || p.getName().equals("Historique")) {
                     musics = Music.createMusicsList(15);
-                    playlistRV.setAdapter(new MusicAdapter(musics));
+                    MusicAdapter mscAdapter = new MusicAdapter(musics);
+                    setMusicListenerClick(mscAdapter);
+                    playlistRV.setAdapter(mscAdapter);
                     updateLayoutManager(playlistRV, 1);
                 } else {
                     playlists = Playlist.createPlaylistsList(15, p.getPathIcon(), p.getName());
-                    playlistRV.setAdapter(new PlaylistAdapter(playlists));
+                    PlaylistAdapter pltAdapter = new PlaylistAdapter(playlists);
+                    setPlaylistListenerClick(pltAdapter);
+                    playlistRV.setAdapter(pltAdapter);
                     updateLayoutManager(playlistRV, 3);
                 }
             }
         });
-
 
         Thread index = new Thread(new Runnable() {
             @Override
@@ -123,6 +129,31 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         index.start();
+
+    }
+
+    private void setPlaylistListenerClick(PlaylistAdapter adap){
+        adap.setOnItemClickListener(new PlaylistAdapter.OnItemClickListener(){
+            @Override
+            public void onItemClick(View view, int position) {
+                TextView tv = findViewById(R.id.title);
+                System.out.println("Playlist : " + tv.getText());
+            }
+        });
+    }
+
+    private void setMusicListenerClick(MusicAdapter adap){
+        adap.setOnItemClickListener(new MusicAdapter.OnItemClickListener(){
+            @Override
+            public void onItemClick(View view, int position) {
+                TextView tv = findViewById(R.id.title);
+                System.out.println("Music : " + tv.getText());
+                Intent intent = new Intent(getApplicationContext() , PlayerActivity.class);
+                intent.putExtra("MusicName", musics.get(position).getMusicName());
+                intent.putExtra("MusicArtist", musics.get(position).getArtist());
+                startActivity(intent);
+            }
+        });
     }
 
     private void updateLayoutManager(RecyclerView rv, int span) {

@@ -45,7 +45,7 @@ public class IndexService {
                 String s = title + artist + album + genre + duration;
                 final String songHash = String.valueOf(s.hashCode());
 
-                songDao.insert(new Song(title, Long.parseLong(duration), null, artist, album, songHash));
+                songDao.insert(new Song(title, Long.parseLong(duration), null, artist, album, songHash, file.getAbsolutePath()));
             }
         }
     }
