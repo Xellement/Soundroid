@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import fr.uge.soundroid.Music;
+import fr.uge.soundroid.MusicAdapter;
 import fr.uge.soundroid.IndexService;
 import fr.uge.soundroid.Playlist;
 import fr.uge.soundroid.PlaylistAdapter;
@@ -27,6 +31,8 @@ import fr.uge.soundroid.R;
 public class HomeActivity extends AppCompatActivity {
 
     private ArrayList<Playlist> playlists, favoris;
+    private ArrayList<Music> musics;
+    private RecyclerView playlistRV, favorisRV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,20 +77,38 @@ public class HomeActivity extends AppCompatActivity {
             return;
         }
 
-        RecyclerView playlistRV = findViewById(R.id.recyclerPlaylist);
-        playlists = Playlist.createPlaylistsList(Color.rgb(45, 45, 107), 15);
+        playlists = Playlist.createPlaylistsList(15, "playlist_icon.png", "Playlist");
+        favoris = Playlist.createFavorisList();
 
+        playlistRV = findViewById(R.id.mainRecycler);
         PlaylistAdapter adapter = new PlaylistAdapter(playlists);
-
         playlistRV.setAdapter(adapter);
-        playlistRV.setLayoutManager(new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false));
+        updateLayoutManager(playlistRV, 3);
 
-        RecyclerView favorisRV = findViewById(R.id.recyclerFavoris);
-
-        PlaylistAdapter adapterFav = new PlaylistAdapter(playlists);
-
+        favorisRV = findViewById(R.id.recyclerFavoris);
+        PlaylistAdapter adapterFav = new PlaylistAdapter(favoris);
         favorisRV.setAdapter(adapterFav);
-        favorisRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        llm.scrollToPositionWithOffset(0, -1);
+        favorisRV.setLayoutManager(llm);
+
+        adapterFav.setOnItemClickListener(new PlaylistAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Playlist p = favoris.get(position);
+                TextView tv = findViewById(R.id.title);
+                tv.setText(p.getName());
+                if (p.getName().equals("Récents") || p.getName().equals("Historique")) {
+                    musics = Music.createMusicsList(15);
+                    playlistRV.setAdapter(new MusicAdapter(musics));
+                    updateLayoutManager(playlistRV, 1);
+                } else {
+                    playlists = Playlist.createPlaylistsList(15, p.getPathIcon(), p.getName());
+                    playlistRV.setAdapter(new PlaylistAdapter(playlists));
+                    updateLayoutManager(playlistRV, 3);
+                }
+            }
+        });
 
 
         Thread index = new Thread(new Runnable() {
@@ -99,5 +123,9 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         index.start();
+    }
+
+    private void updateLayoutManager(RecyclerView rv, int span) {
+        rv.setLayoutManager(new GridLayoutManager(this, span, GridLayoutManager.VERTICAL, false));
     }
 }

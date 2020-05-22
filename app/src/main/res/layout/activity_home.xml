@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerPlaylist"
+        android:id="@+id/mainRecycler"
         android:layout_width="400dp"
         android:layout_height="300dp"
         app:layout_constraintBottom_toTopOf="@+id/downApp"
@@ -52,7 +52,7 @@
         android:text="PLAYLISTS"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerPlaylist"
+        app:layout_constraintBottom_toTopOf="@+id/mainRecycler"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -71,8 +71,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerFavoris"
-        android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
