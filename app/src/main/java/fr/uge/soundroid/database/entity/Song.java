@@ -3,35 +3,19 @@ package fr.uge.soundroid.database.entity;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(foreignKeys = {
-        @ForeignKey(entity = Artist.class,
-                parentColumns = "artistId",
-                childColumns = "artist_id",
-                onDelete = ForeignKey.SET_NULL,
-                onUpdate = ForeignKey.CASCADE),
-        @ForeignKey(entity = Album.class,
-                parentColumns = "albumId",
-                childColumns = "album_id",
-                onDelete = ForeignKey.SET_NULL,
-                onUpdate = ForeignKey.CASCADE)
-},
-        indices = {
-            @Index("artist_id"), @Index("album_id")
-})
+@Entity
 public class Song {
 
     @PrimaryKey(autoGenerate = true)
-    public int songId;
+    public long songId;
 
     @ColumnInfo(name="title")
     public String songTitle;
 
     @ColumnInfo(name="duration")
-    public int songDuration;
+    public long songDuration;
 
     @ColumnInfo(name="tag")
     public String songTag;
@@ -39,11 +23,14 @@ public class Song {
     @ColumnInfo(name="liked")
     public boolean liked;
 
-    @ColumnInfo(name = "artist_id")
-    public int songArtistId;
+    @ColumnInfo(name = "artist_name")
+    public String artistName;
 
-    @ColumnInfo(name = "album_id")
-    public int songAlbumId;
+    @ColumnInfo(name = "album_name")
+    public String albumName;
+
+    @ColumnInfo(name = "hash")
+    public String hash;
 
     @Override
     public boolean equals(@Nullable Object obj) {
@@ -52,6 +39,6 @@ public class Song {
         }
         Song s = (Song) obj;
         return s.songTitle.equals(songTitle) && s.songDuration == songDuration &&
-                s.songArtistId == songArtistId && s.songAlbumId == songAlbumId;
+                s.artistName.equals(artistName) && s.albumName.equals(albumName);
     }
 }
