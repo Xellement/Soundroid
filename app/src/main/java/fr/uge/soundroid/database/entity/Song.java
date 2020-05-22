@@ -32,6 +32,17 @@ public class Song {
     @ColumnInfo(name = "hash")
     public String hash;
 
+    public Song() {}
+
+    public Song(String title, long duration, String tag, String artist, String album) {
+        songTitle = title;
+        songDuration = duration;
+        songTag = tag;
+        artistName = artist;
+        albumName = album;
+        liked = false;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (! (obj instanceof Song)) {
