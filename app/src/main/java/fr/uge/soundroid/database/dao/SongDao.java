@@ -28,7 +28,7 @@ public interface SongDao {
     @Query("SELECT * FROM song WHERE title LIKE '%' || :title || '%'")
     LiveData<List<Song>> findLikeName(String title);
 
-    @Query("SELECT songId, title, duration, tag, liked, artist_name, album_name" +
+    @Query("SELECT songId, title, duration, tag, liked, artist_name, album_name, hash, path " +
             " FROM song where song.artist_name LIKE '%' || :artistName || '%'")
     LiveData<List<Song>> findByArtist(String artistName);
 

@@ -21,15 +21,19 @@ public interface PlaylistSongsJoinDao {
     @Delete
     void delete(PlaylistSongsJoin playlistSongsJoin);
 
+    @Query("DELETE FROM playlist_songs_join")
+    void deleteAll();
+
     @Update
     void update(PlaylistSongsJoin playlistSongsJoin);
 
-    @Query("SELECT * FROM song " +
+    @Query("SELECT song.songId, title, duration, tag, liked, artist_name, album_name, hash, path " +
+            "FROM song " +
             "INNER JOIN playlist_songs_join ON song.songId = playlist_songs_join.songId " +
             "WHERE playlist_songs_join.playlistId = :playlistId")
     LiveData<List<Song>> getSongsFromPlaylist(long playlistId);
 
-    @Query("SELECT * FROM playlist " +
+    @Query("SELECT playlist.playlistId, name, pathIcon FROM playlist " +
             "INNER JOIN playlist_songs_join ON playlist.playlistId = playlist_songs_join.playlistId " +
             "WHERE playlist_songs_join.songId = :songId")
     LiveData<List<Playlist>> getPlaylistsFromSong(long songId);
