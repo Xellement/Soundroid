@@ -30,6 +30,18 @@ public class PlaylistViewModel extends AndroidViewModel {
         return playlistRepository.getAll();
     }
 
+    public LiveData<List<Playlist>> getSongsPlaylists() {
+        return playlistRepository.getSongsPlaylists();
+    }
+
+    public LiveData<List<Playlist>> getArtistsPlaylists() {
+        return playlistRepository.getArtistsPlaylists();
+    }
+
+    public LiveData<List<Playlist>> getAlbumsPlaylists() {
+        return playlistRepository.getAlbumsPlaylists();
+    }
+
     public void insert(Playlist playlist) {
         playlistRepository.insert(playlist);
     }

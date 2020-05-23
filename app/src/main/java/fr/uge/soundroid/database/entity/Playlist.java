@@ -24,6 +24,9 @@ public class Playlist {
     @ColumnInfo(name = "name")
     public String playlistName;
 
+    @ColumnInfo(name = "playlist_type")
+    public int playlistType;    // 0 for classic playlist, 1 for artist playlist, 2 for album playlist
+
     @Ignore
     private transient Bitmap cachedBitmap;
     @Ignore
@@ -32,13 +35,17 @@ public class Playlist {
 
     public Playlist() {}
 
-    public Playlist(String name) {
-        this(name, DEFAULT_ICON);
+    public Playlist(String name, int type) {
+        this(name, DEFAULT_ICON, type);
     }
 
-    public Playlist(String name, String pathIcon) {
+    public Playlist(String name, String pathIcon, int type) {
+        if (type < 0 || type > 2) {
+            throw new IllegalArgumentException();
+        }
         playlistName = name;
         this.pathIcon = pathIcon;
+        playlistType = type;
     }
 
     public String getName() {
@@ -47,6 +54,10 @@ public class Playlist {
 
     public String getPathIcon() {
         return pathIcon;
+    }
+
+    public int getPlaylistType() {
+        return playlistType;
     }
 
     public void setPathIcon(String path) {
@@ -75,7 +86,7 @@ public class Playlist {
             return false;
         }
         Playlist p = (Playlist) obj;
-        return p.playlistId == playlistId && p.playlistName.equals(playlistName);
+        return p.playlistType == playlistType && p.playlistName.equals(playlistName);
     }
 
     @NonNull
@@ -86,11 +97,11 @@ public class Playlist {
 
     public static ArrayList<Playlist> createFavoritesList() {
         ArrayList<Playlist> favorites = new ArrayList<>();
-        favorites.add(new Playlist("Playlist", "playlist_icon.png"));
-        favorites.add(new Playlist("Récents", "music_icon.png"));
-        favorites.add(new Playlist("Historique", "music_icon.png"));
-        favorites.add(new Playlist("Artist", "artist_icon.png"));
-        favorites.add(new Playlist("Album", "album_icon.png"));
+        favorites.add(new Playlist("Playlist", "playlist_icon.png", 0));
+        favorites.add(new Playlist("Récents", "music_icon.png", 0));
+        favorites.add(new Playlist("Historique", "music_icon.png", 0));
+        favorites.add(new Playlist("Artist", "artist_icon.png", 1));
+        favorites.add(new Playlist("Album", "album_icon.png", 2));
         return favorites;
     }
 }

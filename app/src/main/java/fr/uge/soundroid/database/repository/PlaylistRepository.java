@@ -29,6 +29,18 @@ public class PlaylistRepository {
         return playlistDao.getAll();
     }
 
+    public LiveData<List<Playlist>> getSongsPlaylists() {
+        return playlistDao.getSongsPlaylists();
+    }
+
+    public LiveData<List<Playlist>> getArtistsPlaylists() {
+        return playlistDao.getArtistsPlaylists();
+    }
+
+    public LiveData<List<Playlist>> getAlbumsPlaylists() {
+        return playlistDao.getAlbumsPlaylists();
+    }
+
     public void insert(final Playlist playlist) {
         SoundroidDatabase.dbExecutor.execute(new Runnable() {
             @Override

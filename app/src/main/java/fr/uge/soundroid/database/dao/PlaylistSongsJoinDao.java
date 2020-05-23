@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -15,7 +16,7 @@ import fr.uge.soundroid.database.entity.Song;
 
 @Dao
 public interface PlaylistSongsJoinDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(PlaylistSongsJoin playlistSongsJoin);
 
     @Delete
@@ -27,13 +28,13 @@ public interface PlaylistSongsJoinDao {
     @Update
     void update(PlaylistSongsJoin playlistSongsJoin);
 
-    @Query("SELECT song.songId, title, duration, tag, liked, artist_name, album_name, hash, path " +
+    @Query("SELECT song.songId, title, duration, tag, liked, artist_name, album_name, hash, path, icon_path, like_icon_path " +
             "FROM song " +
             "INNER JOIN playlist_songs_join ON song.songId = playlist_songs_join.songId " +
             "WHERE playlist_songs_join.playlistId = :playlistId")
     LiveData<List<Song>> getSongsFromPlaylist(long playlistId);
 
-    @Query("SELECT playlist.playlistId, name, pathIcon FROM playlist " +
+    @Query("SELECT playlist.playlistId, name, pathIcon, playlist_type FROM playlist " +
             "INNER JOIN playlist_songs_join ON playlist.playlistId = playlist_songs_join.playlistId " +
             "WHERE playlist_songs_join.songId = :songId")
     LiveData<List<Playlist>> getPlaylistsFromSong(long songId);

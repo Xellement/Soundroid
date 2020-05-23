@@ -41,6 +41,14 @@ public class SongRepository {
         return songDao.findByAlbum(album);
     }
 
+    public LiveData<List<String>> getArtistsName() {
+        return songDao.getArtistsName();
+    }
+
+    public LiveData<List<String>> getAlbumsName() {
+        return songDao.getAlbumsName();
+    }
+
     public void insert(final Song song) {
         SoundroidDatabase.dbExecutor.execute(new Runnable() {
             @Override

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -28,15 +29,21 @@ public interface SongDao {
     @Query("SELECT * FROM song WHERE title LIKE '%' || :title || '%'")
     LiveData<List<Song>> findLikeName(String title);
 
-    @Query("SELECT songId, title, duration, tag, liked, artist_name, album_name, hash, path " +
+    @Query("SELECT songId, title, duration, tag, liked, artist_name, album_name, hash, path, icon_path, like_icon_path " +
             " FROM song where song.artist_name LIKE '%' || :artistName || '%'")
     LiveData<List<Song>> findByArtist(String artistName);
 
-    @Query("SELECT songId, title, duration, tag, liked, artist_name, album_name" +
+    @Query("SELECT songId, title, duration, tag, liked, artist_name, album_name, hash, path, icon_path, like_icon_path" +
             " FROM song where song.album_name LIKE '%' || :albumTitle || '%'")
     LiveData<List<Song>> findByAlbum(String albumTitle);
 
-    @Insert
+    @Query("SELECT DISTINCT artist_name FROM song")
+    LiveData<List<String>> getArtistsName();
+
+    @Query("SELECT DISTINCT album_name FROM song")
+    LiveData<List<String>> getAlbumsName();
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(Song song);
 
     @Update

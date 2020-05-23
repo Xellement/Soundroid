@@ -42,6 +42,14 @@ public class SongViewModel extends AndroidViewModel {
         return songRepository.findByAlbum(album);
     }
 
+    public LiveData<List<String>> getArtistsName() {
+        return songRepository.getArtistsName();
+    }
+
+    public LiveData<List<String>> getAlbumsName() {
+        return songRepository.getAlbumsName();
+    }
+
     public void insert(Song song) {
         songRepository.insert(song);
     }

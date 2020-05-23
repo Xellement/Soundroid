@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -13,7 +14,7 @@ import fr.uge.soundroid.database.entity.Playlist;
 
 @Dao
 public interface PlaylistDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(Playlist playlist);
 
     @Update
@@ -33,4 +34,14 @@ public interface PlaylistDao {
 
     @Query("SELECT * from playlist")
     LiveData<List<Playlist>> getAll();
+
+    @Query("SELECT * from playlist WHERE playlist_type = 0")
+    LiveData<List<Playlist>> getSongsPlaylists();
+
+    @Query("SELECT * FROM playlist WHERE playlist_type = 1")
+    LiveData<List<Playlist>> getArtistsPlaylists();
+
+    @Query("SELECT * FROM playlist WHERE playlist_type = 2")
+    LiveData<List<Playlist>> getAlbumsPlaylists();
+
 }
