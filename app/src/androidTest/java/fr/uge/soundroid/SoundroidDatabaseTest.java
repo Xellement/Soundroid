@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.uge.soundroid.database.SoundroidDatabase;
@@ -119,5 +120,36 @@ public class SoundroidDatabaseTest {
         assertEquals(2, byPlaylist.size());
         assertTrue(byPlaylist.contains(song));
         assertTrue(byPlaylist.contains(song2));
+    }
+
+    @Test
+    public void getArtistsAndAlbumsName() throws InterruptedException {
+        Song song1 = new Song("Crying", 120, "music", "Johnny", "Time after Time", null, null);
+        song1.songId = db.songDao().insert(song1);
+
+        Song song2 = new Song("Wait", 150, "mucis", "Lennon", "Imagination", null, null);
+        song2.songId = db.songDao().insert(song2);
+
+        Song song3 = new Song("Hello", 90, "tag", "Unknown artist", "Unknown album", null, null);
+        song3.songId = db.songDao().insert(song3);
+
+        Song song4 = new Song("Yo", 110, "tag", "Unknown artist", "Unknown album", null, null);
+        song4.songId = db.songDao().insert(song4);
+
+        List<String> artists = LiveDataTestUtil.getValue(db.songDao().getArtistsName());
+        List<String> albums = LiveDataTestUtil.getValue(db.songDao().getAlbumsName());
+        List<String> artistsExpected = new ArrayList<>(3);
+        List<String> albumsExpected = new ArrayList<>(3);
+
+        artistsExpected.add("Johnny");
+        artistsExpected.add("Lennon");
+        artistsExpected.add("Unknown artist");
+
+        albumsExpected.add("Time after Time");
+        albumsExpected.add("Imagination");
+        albumsExpected.add("Unknown album");
+
+        assertEquals(artistsExpected, artists);
+        assertEquals(albumsExpected, albums);
     }
 }
