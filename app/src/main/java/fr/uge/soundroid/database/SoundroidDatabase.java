@@ -1,10 +1,13 @@
 package fr.uge.soundroid.database;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,19 +25,47 @@ public abstract class SoundroidDatabase extends RoomDatabase {
     public abstract PlaylistDao playlistDao();
     public abstract PlaylistSongsJoinDao playlistSongsJoinDao();
 
-    private static SoundroidDatabase db;
+    private static SoundroidDatabase DB_INSTANCE;
     public static final ExecutorService dbExecutor = Executors.newFixedThreadPool(4);
 
     public static SoundroidDatabase getDatabase(final Context ctx) {
-        if (db == null) {
+        if (DB_INSTANCE == null) {
             synchronized (SoundroidDatabase.class) {
-                if (db == null) {
-                    db = Room.databaseBuilder(ctx.getApplicationContext(),
+                if (DB_INSTANCE == null) {
+                    DB_INSTANCE = Room.databaseBuilder(ctx.getApplicationContext(),
                         SoundroidDatabase.class, "soundroid_database")
+                            .addCallback(databaseCallback)
                             .build();
                 }
             }
         }
-        return db;
+        return DB_INSTANCE;
+    }
+
+    private static RoomDatabase.Callback databaseCallback =
+            new RoomDatabase.Callback() {
+                @Override
+                public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                    super.onCreate(db);
+                    new PopulateDBAsync(DB_INSTANCE).execute();
+                }
+            };
+
+    private static class PopulateDBAsync extends AsyncTask<Void, Void, Void> {
+        private final PlaylistDao playlistDao;
+
+        PopulateDBAsync(SoundroidDatabase db) {
+            playlistDao = db.playlistDao();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            // TODO : find how we should pre-populate the db when its created
+//            for (int i = 1; i <= 10; i++) {
+//                playlistDao.insert(new Playlist("Playlist n°"+i, "playlist_icon.png"));
+//            }
+//            Log.d("playlistCreation", "Created playlists");
+            return null;
+        }
     }
 }
