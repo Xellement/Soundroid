@@ -53,4 +53,13 @@ public class PlaylistSongsJoinRepository {
             }
         });
     }
+
+    public void deleteAll() {
+        SoundroidDatabase.dbExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                playlistSongsJoinDao.deleteAll();
+            }
+        });
+    }
 }

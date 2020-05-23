@@ -4,6 +4,8 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.List;
+
 import fr.uge.soundroid.database.SoundroidDatabase;
 import fr.uge.soundroid.database.dao.PlaylistDao;
 import fr.uge.soundroid.database.entity.Playlist;
@@ -21,6 +23,10 @@ public class PlaylistRepository {
 
     public LiveData<Playlist> findById(long id) {
         return playlistDao.findById(id);
+    }
+
+    public LiveData<List<Playlist>> getAll() {
+        return playlistDao.getAll();
     }
 
     public void insert(final Playlist playlist) {
@@ -46,6 +52,15 @@ public class PlaylistRepository {
             @Override
             public void run() {
                 playlistDao.delete(playlist);
+            }
+        });
+    }
+
+    public void deleteAll() {
+        SoundroidDatabase.dbExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                playlistDao.deleteAll();
             }
         });
     }
