@@ -5,6 +5,8 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import java.util.List;
+
 import fr.uge.soundroid.database.entity.Playlist;
 import fr.uge.soundroid.database.repository.PlaylistRepository;
 
@@ -24,6 +26,10 @@ public class PlaylistViewModel extends AndroidViewModel {
         return playlistRepository.findById(id);
     }
 
+    public LiveData<List<Playlist>> getAll() {
+        return playlistRepository.getAll();
+    }
+
     public void insert(Playlist playlist) {
         playlistRepository.insert(playlist);
     }
@@ -34,5 +40,9 @@ public class PlaylistViewModel extends AndroidViewModel {
 
     public void delete(Playlist playlist) {
         playlistRepository.delete(playlist);
+    }
+
+    public void deleteAll() {
+        playlistRepository.deleteAll();
     }
 }

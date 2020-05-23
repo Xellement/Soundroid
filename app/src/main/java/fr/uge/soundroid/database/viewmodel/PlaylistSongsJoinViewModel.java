@@ -40,4 +40,8 @@ public class PlaylistSongsJoinViewModel extends AndroidViewModel {
     public void delete(PlaylistSongsJoin playlistSongsJoin) {
         playlistSongsJoinRepository.delete(playlistSongsJoin);
     }
+
+    public void deleteAll() {
+        playlistSongsJoinRepository.deleteAll();
+    }
 }
