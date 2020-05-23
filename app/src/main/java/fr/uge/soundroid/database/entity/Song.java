@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.IOException;
@@ -45,10 +46,32 @@ public class Song implements Serializable {
     @ColumnInfo(name = "path")
     public String path;
 
+    @Ignore
     private transient Bitmap cachedIconBitmap;
+    @Ignore
     private transient Bitmap cachedLikeBitmap;
+
+    @ColumnInfo(name = "icon_path")
     private String pathIcon;
+
+    @ColumnInfo(name = "like_icon_path")
     private String pathLike;
+
+    public String getPathIcon(){
+        return pathIcon;
+    }
+
+    public String getPathLike() {
+        return pathLike;
+    }
+
+    public void setPathIcon(String path) {
+        pathIcon = path;
+    }
+
+    public void setPathLike(String path) {
+        pathLike = path;
+    }
 
     public Song() {}
 
@@ -63,7 +86,7 @@ public class Song implements Serializable {
         songHash = hash;
         liked = false;
         pathIcon = "music_icon.png";
-
+        Log.d("SongCreation", "Created song " + songTitle + " - "  + pathIcon);
     }
 
     @Override
@@ -90,9 +113,17 @@ public class Song implements Serializable {
         return artistName;
     }
 
+    public boolean isLiked() {
+        return liked;
+    }
+
     public Bitmap getBitmapIcon(Context context) {
         if (cachedIconBitmap == null) {
-            try (InputStream is = context.getAssets().open(pathIcon)){
+            if (pathIcon == null ) {
+                Log.d("nullError", "Path icon for " + songTitle + " is null");
+                pathIcon = "music_icon.png";
+            }
+            try (InputStream is = context.getAssets().open("music_icon.png")){
                 cachedIconBitmap = BitmapFactory.decodeStream(is);
             } catch (IOException e) {
                 Log.e(String.valueOf(Log.ERROR), "Error bitmap icon");
@@ -104,7 +135,7 @@ public class Song implements Serializable {
 
     public Bitmap getBitmapLike(Context context) {
         if (cachedLikeBitmap == null) {
-            try (InputStream is = context.getAssets().open(pathLike)){
+            try (InputStream is = context.getAssets().open("like.png")){
                 cachedLikeBitmap = BitmapFactory.decodeStream(is);
             } catch (IOException e) {
                 Log.e(String.valueOf(Log.ERROR), "Error bitmap");
