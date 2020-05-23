@@ -24,7 +24,7 @@ import static android.media.MediaMetadataRetriever.METADATA_KEY_TITLE;
 public class IndexService {
     private SongDao songDao;
     private PlaylistDao playlistDao;
-    private long playlistId;
+    private long musicsPlaylist;
     private PlaylistSongsJoinDao playlistSongsJoinDao;
 
     public IndexService(Application app) {
@@ -39,7 +39,7 @@ public class IndexService {
         playlistDao.deleteAll();
         songDao.deleteAll();
         Log.d("musicsList", "Starting indexation");
-        playlistId = playlistDao.insert(new Playlist("Musics"));
+        musicsPlaylist = playlistDao.insert(new Playlist("Musics", 0));
         //TODO : find a method that isnt deprecated to get root path of external storage
         addMusicFilesFrom(Environment.getExternalStoragePublicDirectory("").getAbsolutePath(), 0);
         Log.d("Song list", songDao.getAll().toString());
@@ -70,14 +70,23 @@ public class IndexService {
                 genre = (genre == null) ? "Unknown genre" : genre;
 
                 String s = title + artist + album + genre + duration;
-                Log.d("currentSong", s);
                 final String songHash = String.valueOf(s.hashCode());
 
                 Song song = new Song(title, Long.parseLong(duration), null, artist, album, songHash, file.getAbsolutePath());
-                song.songId = songDao.insert(song);
-                // TODO : should we always insert the new indexed song into the 'Musics' playlist ? (it is the current behavior)
-                playlistSongsJoinDao.insert(new PlaylistSongsJoin(playlistId, song.songId));
+                insertSong(song);
             }
         }
+    }
+
+    private void insertSong(Song song) {
+        song.songId = songDao.insert(song);
+        // TODO : find why onConflict strategy doesnt work : playlist are recreated
+        long artistsPlaylistId = playlistDao.insert(new Playlist(song.artistName, 1));
+        long albumsPlaylistId = playlistDao.insert(new Playlist(song.albumName, 2));
+
+        playlistSongsJoinDao.insert(new PlaylistSongsJoin(artistsPlaylistId, song.songId));
+        playlistSongsJoinDao.insert(new PlaylistSongsJoin(albumsPlaylistId, song.songId));
+        playlistSongsJoinDao.insert(new PlaylistSongsJoin(musicsPlaylist, song.songId));
+
     }
 }

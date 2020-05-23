@@ -34,13 +34,15 @@ import fr.uge.soundroid.database.viewmodel.SongViewModel;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private ArrayList<Playlist> playlists = new ArrayList<>();
-    private ArrayList<Playlist> favorites;
-    private ArrayList<Song> musics = new ArrayList<>();
+    private List<Playlist> songsPlaylist = new ArrayList<>();
+    private List<Playlist> favorites;
+    private List<Playlist> artistsList;
+    private List<Playlist> albumsList;
+    private List<Song> musics = new ArrayList<>();
     private RecyclerView playlistRV, favoritesRV;
     private SongViewModel songViewModel;
     private PlaylistViewModel playlistViewModel;
-    private PlaylistAdapter playlistAdapter = new PlaylistAdapter(playlists);
+    private PlaylistAdapter playlistAdapter = new PlaylistAdapter(songsPlaylist);
     private PlaylistAdapter favoritesAdapter;
     private SongAdapter songAdapter = new SongAdapter(musics);
     private IndexService indexService;
@@ -60,12 +62,27 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        playlistViewModel.getAll().observe(this, new Observer<List<Playlist>>() {
+        playlistViewModel.getSongsPlaylists().observe(this, new Observer<List<Playlist>>() {
             @Override
             public void onChanged(List<Playlist> playlists) {
-                playlistAdapter.setPlaylists(playlists);
+                songsPlaylist = playlists;
             }
         });
+
+        playlistViewModel.getArtistsPlaylists().observe(this, new Observer<List<Playlist>>() {
+            @Override
+            public void onChanged(List<Playlist> playlists) {
+                artistsList = playlists;
+            }
+        });
+
+        playlistViewModel.getAlbumsPlaylists().observe(this, new Observer<List<Playlist>>() {
+            @Override
+            public void onChanged(List<Playlist> playlists) {
+                albumsList = playlists;
+            }
+        });
+
 
 
 //        playlists = Playlist.createPlaylistsList(15, "playlist_icon.png", "Playlist");
@@ -73,6 +90,7 @@ public class HomeActivity extends AppCompatActivity {
 
         playlistRV = findViewById(R.id.mainRecycler);
 //        PlaylistAdapter adapter = new PlaylistAdapter(playlists);
+        playlistAdapter.setPlaylists(songsPlaylist);
         setPlaylistListenerClick(playlistAdapter);
         playlistRV.setAdapter(playlistAdapter);
         updateLayoutManager(playlistRV, 3);
@@ -92,22 +110,25 @@ public class HomeActivity extends AppCompatActivity {
                 TextView tv = findViewById(R.id.title);
                 tv.setText(p.getName());
                 if (p.getName().equals("Récents") || p.getName().equals("Historique")) {
-//                    musics = Music.createMusicsList(15);
-//                    SongAdapter mscAdapter = new SongAdapter(musics);
                     setMusicListenerClick(songAdapter);
                     playlistRV.setAdapter(songAdapter);
                     updateLayoutManager(playlistRV, 1);
+                } else if (p.getName().equals("Artist")) {
+                    updatePlaylistAdapter(artistsList);
+                } else if (p.getName().equals("Album")) {
+                    updatePlaylistAdapter(albumsList);
                 } else {
-                    // TODO : create db query to compute a List of artists and a list of album
-                    // TODO : (both will in fact be playlists, but we should get the right names)
-//                    playlists = Playlist.createPlaylistsList(15, p.getPathIcon(), p.getName());
-//                    PlaylistAdapter pltAdapter = new PlaylistAdapter(playlists);
-                    setPlaylistListenerClick(playlistAdapter);
-                    playlistRV.setAdapter(playlistAdapter);
-                    updateLayoutManager(playlistRV, 3);
+                    updatePlaylistAdapter(songsPlaylist);
                 }
             }
         });
+    }
+
+    private void updatePlaylistAdapter(List<Playlist> playlists) {
+        playlistAdapter.setPlaylists(playlists);
+        setPlaylistListenerClick(playlistAdapter);
+        playlistRV.setAdapter(playlistAdapter);
+        updateLayoutManager(playlistRV, 3);
     }
 
     private static final String[] PERMISSIONS = {
@@ -161,15 +182,15 @@ public class HomeActivity extends AppCompatActivity {
         index.start();
     }
 
-    private void setPlaylistListenerClick(PlaylistAdapter adap){
+    private void setPlaylistListenerClick(final PlaylistAdapter adap){
         adap.setOnItemClickListener(new PlaylistAdapter.OnItemClickListener(){
             @Override
             public void onItemClick(View view, int position) {
                 TextView tv = findViewById(R.id.title);
                 System.out.println("Playlist : " + tv.getText());
                 Intent intent = new Intent(getApplicationContext(), PlaylistActivity.class);
-                intent.putExtra("PlaylistId", playlistAdapter.getPlaylists().get(position).getPlaylistId());
-                intent.putExtra("PlaylistName", playlistAdapter.getPlaylists().get(position).playlistName);
+                intent.putExtra("PlaylistId", adap.getPlaylists().get(position).getPlaylistId());
+                intent.putExtra("PlaylistName", adap.getPlaylists().get(position).getName());
                 startActivity(intent);
             }
         });
