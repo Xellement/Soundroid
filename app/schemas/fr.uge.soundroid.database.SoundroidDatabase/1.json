@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "aa8fc1c5a1a5c016567f401390cb654d",
+    "identityHash": "8178e7bd4c3734a301ea2ca3c4f74691",
     "entities": [
       {
         "tableName": "Song",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`songId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `duration` INTEGER NOT NULL, `tag` TEXT, `liked` INTEGER NOT NULL, `artist_name` TEXT, `album_name` TEXT, `hash` TEXT, `path` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`songId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `duration` INTEGER NOT NULL, `tag` TEXT, `liked` INTEGER NOT NULL, `artist_name` TEXT, `album_name` TEXT, `hash` TEXT, `path` TEXT, `icon_path` TEXT, `like_icon_path` TEXT)",
         "fields": [
           {
             "fieldPath": "songId",
@@ -61,6 +61,18 @@
             "columnName": "path",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "pathIcon",
+            "columnName": "icon_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pathLike",
+            "columnName": "like_icon_path",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -74,7 +86,7 @@
       },
       {
         "tableName": "Playlist",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`playlistId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`playlistId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `pathIcon` TEXT)",
         "fields": [
           {
             "fieldPath": "playlistId",
@@ -85,6 +97,12 @@
           {
             "fieldPath": "playlistName",
             "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pathIcon",
+            "columnName": "pathIcon",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -169,7 +187,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'aa8fc1c5a1a5c016567f401390cb654d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8178e7bd4c3734a301ea2ca3c4f74691')"
     ]
   }
 }
