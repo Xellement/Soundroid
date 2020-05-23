@@ -70,6 +70,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>{
 
     public void setMusicList(List<Song> l) {
         musics = l;
+        notifyDataSetChanged();
+    }
+
+    public List<Song> getMusics() {
+        return musics;
     }
 
     @NonNull
