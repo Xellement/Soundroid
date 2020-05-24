@@ -14,8 +14,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import fr.uge.soundroid.service.IndexService;
 import fr.uge.soundroid.R;
+import fr.uge.soundroid.service.IndexService;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -26,7 +26,8 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private static final String[] PERMISSIONS = {
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.FOREGROUND_SERVICE
     };
 
     private static final int REQUEST_PERMISSIONS = 1;
