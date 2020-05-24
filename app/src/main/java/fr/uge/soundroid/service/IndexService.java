@@ -1,4 +1,4 @@
-package fr.uge.soundroid;
+package fr.uge.soundroid.service;
 
 import android.app.Application;
 import android.media.MediaMetadataRetriever;
@@ -62,6 +62,7 @@ public class IndexService {
                 String album = mtr.extractMetadata(METADATA_KEY_ALBUM);
                 String genre = mtr.extractMetadata(METADATA_KEY_GENRE);
                 String duration = mtr.extractMetadata(METADATA_KEY_DURATION);
+                byte[] picture = mtr.getEmbeddedPicture();
                 // TODO : should we index songs that doesn't have metadata ?
                 if (title == null) continue;
 
@@ -73,8 +74,9 @@ public class IndexService {
                 String s = title + artist + album + genre + duration;
                 final String songHash = String.valueOf(s.hashCode());
 
-                Song song = new Song(title, Long.parseLong(duration), null, artist, album, songHash, file.getAbsolutePath());
+                Song song = new Song(title, Long.parseLong(duration), null, artist, album, songHash, file.getAbsolutePath(), picture);
                 insertSong(song);
+                mtr.release();
             }
         }
     }

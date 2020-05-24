@@ -54,6 +54,9 @@ public class Song implements Serializable {
     @ColumnInfo(name = "icon_path")
     private String pathIcon;
 
+    @Ignore
+    private byte[] picture;
+
     @ColumnInfo(name = "like_icon_path")
     private String pathLike;
 
@@ -76,7 +79,7 @@ public class Song implements Serializable {
     public Song() {}
 
     public Song(String title, long duration, String tag, String artist, String album, String hash
-            , String path) {
+            , String path, byte[] picture) {
         songTitle = title;
         songDuration = duration;
         songTag = tag;
@@ -85,6 +88,7 @@ public class Song implements Serializable {
         this.path = path;
         songHash = hash;
         liked = false;
+        this.picture = picture;
         pathIcon = "music_icon.png";
         Log.d("SongCreation", "Created song " + songTitle + " - "  + pathIcon);
     }
@@ -119,15 +123,18 @@ public class Song implements Serializable {
 
     public Bitmap getBitmapIcon(Context context) {
         if (cachedIconBitmap == null) {
-            if (pathIcon == null ) {
-                Log.d("nullError", "Path icon for " + songTitle + " is null");
-                pathIcon = "music_icon.png";
+            if (picture != null) {
+                Log.d(songTitle, "Picture isnt null");
+                cachedIconBitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
             }
-            try (InputStream is = context.getAssets().open("music_icon.png")){
-                cachedIconBitmap = BitmapFactory.decodeStream(is);
-            } catch (IOException e) {
-                Log.e(String.valueOf(Log.ERROR), "Error bitmap icon");
-                e.printStackTrace();
+            else {
+                Log.d(songTitle, "Picture is null");
+                try (InputStream is = context.getAssets().open(pathIcon)) {
+                    cachedIconBitmap = BitmapFactory.decodeStream(is);
+                } catch (IOException e) {
+                    Log.e(String.valueOf(Log.ERROR), "Error bitmap icon");
+                    e.printStackTrace();
+                }
             }
         }
         return cachedIconBitmap;

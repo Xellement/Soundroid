@@ -14,7 +14,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import fr.uge.soundroid.IndexService;
+import fr.uge.soundroid.service.IndexService;
 import fr.uge.soundroid.R;
 
 public class StartActivity extends AppCompatActivity {
