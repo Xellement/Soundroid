@@ -135,7 +135,8 @@ public class Song implements Serializable {
 
     public Bitmap getBitmapLike(Context context) {
         if (cachedLikeBitmap == null) {
-            try (InputStream is = context.getAssets().open("like.png")){
+            String likeIcon = (liked) ? "like.png" : "nolike.png";
+            try (InputStream is = context.getAssets().open(likeIcon)){
                 cachedLikeBitmap = BitmapFactory.decodeStream(is);
             } catch (IOException e) {
                 Log.e(String.valueOf(Log.ERROR), "Error bitmap");

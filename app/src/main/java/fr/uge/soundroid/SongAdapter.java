@@ -52,11 +52,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>{
             });
         }
 
-        private void update(Song m) {
-            musicName.setText(m.getMusicName());
-            musicArtist.setText(m.getArtist());
-            iconMusic.setImageBitmap(m.getBitmapIcon(iconMusic.getContext()));
-            iconLike.setImageBitmap(m.getBitmapLike(iconLike.getContext()));
+        private void update(Song song) {
+            musicName.setText(song.getMusicName());
+            musicArtist.setText(song.getArtist());
+            iconMusic.setImageBitmap(song.getBitmapIcon(iconMusic.getContext()));
+            iconLike.setImageBitmap(song.getBitmapLike(iconLike.getContext()));
         }
 
         @Override
