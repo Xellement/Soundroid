@@ -3,6 +3,7 @@ package fr.uge.soundroid.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +22,6 @@ import fr.uge.soundroid.database.viewmodel.PlaylistSongsJoinViewModel;
 
 public class PlaylistActivity extends AppCompatActivity {
 
-    private ArrayList<Song> musics;
     private RecyclerView rv;
     private PlaylistSongsJoinViewModel playlistSongsJoinViewModel;
     private SongAdapter adapter = new SongAdapter(new ArrayList<Song>());
@@ -30,26 +30,33 @@ public class PlaylistActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
-
-        long id = getIntent().getLongExtra("PlaylistId", 0);
-        String name = getIntent().getStringExtra("PlaylistName");
         playlistSongsJoinViewModel = ViewModelProviders.of(this).get(PlaylistSongsJoinViewModel.class);
-        playlistSongsJoinViewModel.getSongsFromPlaylist(id)
-                .observe(this, new Observer<List<Song>>() {
-                    @Override
-                    public void onChanged(List<Song> songs) {
-                        adapter.setMusicList(songs);
-                    }
-                });
-//        musics = Music.createMusicsList(30);
+        long id = getIntent().getLongExtra("PlaylistId", 0);
+        String artist = getIntent().getStringExtra("PlaylistArtist");
+        String name = getIntent().getStringExtra("PlaylistName");
+        String iconPath = getIntent().getStringExtra("PlaylistIcon");
+        iconPath = iconPath.substring(0, iconPath.indexOf("."));
+        int iconId = getResources().getIdentifier(iconPath, "drawable", getPackageName());
+
+        playlistSongsJoinViewModel.getSongsFromPlaylist(id).observe(this, new Observer<List<Song>>() {
+            @Override
+            public void onChanged(List<Song> songs) {
+                adapter.setMusicList(songs);
+            }
+        });
+
         TextView tv = findViewById(R.id.playlistName);
         tv.setText(name);
+        tv = findViewById(R.id.playlistArtist);
+        tv.setText(artist);
+        ImageView iv = findViewById(R.id.imageView);
+        iv.setImageResource(iconId);
         rv = findViewById(R.id.recyclerPlaylist);
         // TODO : maybe find a way to refactor this because its the same code as in HomeActivity.setMusicClickListener()
-        adapter.setOnItemClickListener(new SongAdapter.OnItemClickListener(){
+        adapter.setOnItemClickListener(new SongAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getApplicationContext() , PlayerActivity.class);
+                Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
                 intent.putExtra("MusicName", adapter.getMusics().get(position).getMusicName());
                 intent.putExtra("MusicArtist", adapter.getMusics().get(position).getArtist());
                 intent.putExtra("isLiked", adapter.getMusics().get(position).isLiked());

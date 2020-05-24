@@ -30,26 +30,43 @@ public class Playlist {
     @ColumnInfo(name = "playlist_type")
     public int playlistType;    // 0 for classic playlist, 1 for artist playlist, 2 for album playlist
 
+    @ColumnInfo(name = "playlist_artist")
+    public String playlistArtist;
+
+    @ColumnInfo(name = "icon_path")
+    private String pathIcon;
+
     @Ignore
     private transient Bitmap cachedBitmap;
     @Ignore
     private final static String DEFAULT_ICON = "playlist_icon.png";
-    private String pathIcon;
+    @Ignore
+    private final static String DEFAULT_ARTIST = "Various";
+
 
     public Playlist() {
     }
 
     public Playlist(String name, int type) {
-        this(name, DEFAULT_ICON, type);
+        this(name, DEFAULT_ICON, type, DEFAULT_ARTIST);
     }
 
     public Playlist(String name, String pathIcon, int type) {
+        this(name, pathIcon, type, DEFAULT_ARTIST);
+    }
+
+    public Playlist(String name, int type, String artist) {
+        this(name, DEFAULT_ICON, type, DEFAULT_ARTIST);
+    }
+
+    public Playlist(String name, String pathIcon, int type, String artist) {
         if (type < 0 || type > 2) {
             throw new IllegalArgumentException();
         }
         playlistName = name;
         this.pathIcon = pathIcon;
         playlistType = type;
+        playlistArtist = artist;
     }
 
     public String getName() {
@@ -62,6 +79,10 @@ public class Playlist {
 
     public int getPlaylistType() {
         return playlistType;
+    }
+
+    public String getPlaylistArtist() {
+        return playlistArtist;
     }
 
     public void setPathIcon(String path) {
@@ -77,8 +98,7 @@ public class Playlist {
             try (InputStream is = context.getAssets().open(pathIcon)) {
                 cachedBitmap = BitmapFactory.decodeStream(is);
             } catch (IOException e) {
-                Log.e(String.valueOf(Log.ERROR), "Error bitmap");
-                e.printStackTrace();
+                Log.e(String.valueOf(Log.ERROR), "Error bitmap" + e.toString());
             }
         }
         return cachedBitmap;

@@ -34,7 +34,7 @@ public interface PlaylistSongsJoinDao {
             "WHERE playlist_songs_join.playlistId = :playlistId")
     LiveData<List<Song>> getSongsFromPlaylist(long playlistId);
 
-    @Query("SELECT playlist.playlistId, name, pathIcon, playlist_type FROM playlist " +
+    @Query("SELECT playlist.playlistId, name, icon_path, playlist_type, playlist_artist FROM playlist " +
             "INNER JOIN playlist_songs_join ON playlist.playlistId = playlist_songs_join.playlistId " +
             "WHERE playlist_songs_join.songId = :songId")
     LiveData<List<Playlist>> getPlaylistsFromSong(long songId);
