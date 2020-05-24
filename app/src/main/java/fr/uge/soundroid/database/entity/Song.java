@@ -60,22 +60,6 @@ public class Song implements Serializable {
     @ColumnInfo(name = "like_icon_path")
     private String pathLike;
 
-    public String getPathIcon(){
-        return pathIcon;
-    }
-
-    public String getPathLike() {
-        return pathLike;
-    }
-
-    public void setPathIcon(String path) {
-        pathIcon = path;
-    }
-
-    public void setPathLike(String path) {
-        pathLike = path;
-    }
-
     public Song() {}
 
     public Song(String title, long duration, String tag, String artist, String album, String hash
@@ -90,7 +74,7 @@ public class Song implements Serializable {
         liked = false;
         this.picture = picture;
         pathIcon = "music_icon.png";
-        Log.d("SongCreation", "Created song " + songTitle + " - "  + pathIcon);
+        Log.d("SongCreation", "Created song " + songTitle + " - "  + this.path);
     }
 
     @Override
@@ -106,7 +90,8 @@ public class Song implements Serializable {
     @NonNull
     @Override
     public String toString() {
-        return "[ Title: " + songTitle + "; Artist: " + artistName + "; Album: " + albumName + "; Duration: " + songDuration + "ms; Hash: " + songHash + " ]";
+        return "[ Title: " + songTitle + "; Artist: " + artistName + "; Album: " + albumName
+                + "; Duration: " + songDuration + "ms; Hash: " + songHash + "; Path : " + path + " ]";
     }
 
     public String getMusicName() {
@@ -117,8 +102,31 @@ public class Song implements Serializable {
         return artistName;
     }
 
+    public String getAlbum() {
+        return albumName;
+    }
+
     public boolean isLiked() {
         return liked;
+    }
+
+    public String getPathIcon(){
+        return pathIcon;
+    }
+
+    public String getPathLike() {
+        return pathLike;
+    }
+
+    public String getSongPath() {
+        return path;
+    }
+    public void setPathIcon(String path) {
+        pathIcon = path;
+    }
+
+    public void setPathLike(String path) {
+        pathLike = path;
     }
 
     public Bitmap getBitmapIcon(Context context) {
@@ -142,7 +150,7 @@ public class Song implements Serializable {
 
     public Bitmap getBitmapLike(Context context) {
         if (cachedLikeBitmap == null) {
-            String likeIcon = (liked) ? "like.png" : "nolike.png";
+            String likeIcon = (isLiked()) ? "like.png" : "nolike.png";
             try (InputStream is = context.getAssets().open(likeIcon)){
                 cachedLikeBitmap = BitmapFactory.decodeStream(is);
             } catch (IOException e) {
