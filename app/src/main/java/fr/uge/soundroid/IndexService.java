@@ -62,8 +62,9 @@ public class IndexService {
                 String album = mtr.extractMetadata(METADATA_KEY_ALBUM);
                 String genre = mtr.extractMetadata(METADATA_KEY_GENRE);
                 String duration = mtr.extractMetadata(METADATA_KEY_DURATION);
-
+                // TODO : should we index songs that doesn't have metadata ?
                 if (title == null) continue;
+
                 title = (title == null) ? "Track " + (++index) : title;
                 artist = (artist == null) ? "Unknown artist" : artist;
                 album = (album == null) ? "Unknown album" : album;
@@ -80,18 +81,17 @@ public class IndexService {
 
     private void insertSong(Song song) {
         song.songId = songDao.insert(song);
-        long artistsPlaylistId = playlistDao.insert(new Playlist(song.artistName, 1));
+        long artistsPlaylistId = playlistDao.insert(new Playlist(song.artistName, "artist_icon.png", 1, song.artistName));
         if (artistsPlaylistId <= 0) {
             artistsPlaylistId = playlistDao.getIdByName(song.artistName);
         }
-        long albumsPlaylistId = playlistDao.insert(new Playlist(song.albumName, 2));
+        long albumsPlaylistId = playlistDao.insert(new Playlist(song.albumName, "album_icon.png", 2, song.artistName));
         if (albumsPlaylistId == -1) {
             albumsPlaylistId = playlistDao.getIdByName(song.albumName);
         }
         if (musicsPlaylist == -1) {
             musicsPlaylist = playlistDao.getIdByName("Musics");
         }
-//        Log.d("ids", "artist : " + artistsPlaylistId + " album : " +albumsPlaylistId + "musics :" + musicsPlaylist);
         playlistSongsJoinDao.insert(new PlaylistSongsJoin(artistsPlaylistId, song.songId));
         playlistSongsJoinDao.insert(new PlaylistSongsJoin(albumsPlaylistId, song.songId));
         playlistSongsJoinDao.insert(new PlaylistSongsJoin(musicsPlaylist, song.songId));
