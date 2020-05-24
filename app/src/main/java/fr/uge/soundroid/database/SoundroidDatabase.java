@@ -34,7 +34,7 @@ public abstract class SoundroidDatabase extends RoomDatabase {
                 if (DB_INSTANCE == null) {
                     DB_INSTANCE = Room.databaseBuilder(ctx.getApplicationContext(),
                         SoundroidDatabase.class, "soundroid_database")
-                            .addCallback(databaseCallback)
+//                            .addCallback(databaseCallback)
                             .build();
                 }
             }
@@ -66,6 +66,11 @@ public abstract class SoundroidDatabase extends RoomDatabase {
 //            }
 //            Log.d("playlistCreation", "Created playlists");
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
         }
     }
 }

@@ -10,13 +10,16 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-@Entity
+@Entity(indices = {
+        @Index(value = "name", unique = true)
+})
 public class Playlist {
     @PrimaryKey(autoGenerate = true)
     public long playlistId;
@@ -33,7 +36,8 @@ public class Playlist {
     private final static String DEFAULT_ICON = "playlist_icon.png";
     private String pathIcon;
 
-    public Playlist() {}
+    public Playlist() {
+    }
 
     public Playlist(String name, int type) {
         this(name, DEFAULT_ICON, type);
@@ -70,7 +74,7 @@ public class Playlist {
 
     public Bitmap getBitmap(Context context) {
         if (cachedBitmap == null) {
-            try (InputStream is = context.getAssets().open(pathIcon)){
+            try (InputStream is = context.getAssets().open(pathIcon)) {
                 cachedBitmap = BitmapFactory.decodeStream(is);
             } catch (IOException e) {
                 Log.e(String.valueOf(Log.ERROR), "Error bitmap");
@@ -82,7 +86,7 @@ public class Playlist {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (! (obj instanceof Playlist)) {
+        if (!(obj instanceof Playlist)) {
             return false;
         }
         Playlist p = (Playlist) obj;

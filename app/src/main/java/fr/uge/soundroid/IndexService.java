@@ -25,6 +25,7 @@ public class IndexService {
     private SongDao songDao;
     private PlaylistDao playlistDao;
     private long musicsPlaylist;
+    private long index;
     private PlaylistSongsJoinDao playlistSongsJoinDao;
 
     public IndexService(Application app) {
@@ -41,18 +42,17 @@ public class IndexService {
         Log.d("musicsList", "Starting indexation");
         musicsPlaylist = playlistDao.insert(new Playlist("Musics", 0));
         //TODO : find a method that isnt deprecated to get root path of external storage
-        addMusicFilesFrom(Environment.getExternalStoragePublicDirectory("").getAbsolutePath(), 0);
+        addMusicFilesFrom(Environment.getExternalStoragePublicDirectory("").getAbsolutePath());
         Log.d("Song list", songDao.getAll().toString());
     }
 
-    private void addMusicFilesFrom(String dirPath, int index) {
+    private void addMusicFilesFrom(String dirPath) {
         final File dir = new File(dirPath);
         final File[] files = dir.listFiles();
         assert files != null;
-        int i = 0;
         for (File file: files) {
             if (file.isDirectory()) {
-                addMusicFilesFrom(file.getAbsolutePath(), index);
+                addMusicFilesFrom(file.getAbsolutePath());
             } else if (file.isFile() && file.getPath().endsWith(".mp3")) {
                 MediaMetadataRetriever mtr = new MediaMetadataRetriever();
                 mtr.setDataSource(file.getAbsolutePath());
@@ -63,7 +63,7 @@ public class IndexService {
                 String genre = mtr.extractMetadata(METADATA_KEY_GENRE);
                 String duration = mtr.extractMetadata(METADATA_KEY_DURATION);
 
-
+                if (title == null) continue;
                 title = (title == null) ? "Track " + (++index) : title;
                 artist = (artist == null) ? "Unknown artist" : artist;
                 album = (album == null) ? "Unknown album" : album;
@@ -80,13 +80,20 @@ public class IndexService {
 
     private void insertSong(Song song) {
         song.songId = songDao.insert(song);
-        // TODO : find why onConflict strategy doesnt work : playlist are recreated
         long artistsPlaylistId = playlistDao.insert(new Playlist(song.artistName, 1));
+        if (artistsPlaylistId <= 0) {
+            artistsPlaylistId = playlistDao.getIdByName(song.artistName);
+        }
         long albumsPlaylistId = playlistDao.insert(new Playlist(song.albumName, 2));
-
+        if (albumsPlaylistId == -1) {
+            albumsPlaylistId = playlistDao.getIdByName(song.albumName);
+        }
+        if (musicsPlaylist == -1) {
+            musicsPlaylist = playlistDao.getIdByName("Musics");
+        }
+//        Log.d("ids", "artist : " + artistsPlaylistId + " album : " +albumsPlaylistId + "musics :" + musicsPlaylist);
         playlistSongsJoinDao.insert(new PlaylistSongsJoin(artistsPlaylistId, song.songId));
         playlistSongsJoinDao.insert(new PlaylistSongsJoin(albumsPlaylistId, song.songId));
         playlistSongsJoinDao.insert(new PlaylistSongsJoin(musicsPlaylist, song.songId));
-
     }
 }

@@ -26,6 +26,9 @@ public interface PlaylistDao {
     @Query("DELETE FROM playlist")
     void deleteAll();
 
+    @Query("SELECT playlistId FROM playlist WHERE name = :name")
+    long getIdByName(String name);
+
     @Query("SELECT * FROM playlist WHERE name = :name")
     LiveData<Playlist> findByName(String name);
 
