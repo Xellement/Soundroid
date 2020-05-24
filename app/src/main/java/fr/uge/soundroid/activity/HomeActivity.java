@@ -130,6 +130,8 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), PlaylistActivity.class);
                 intent.putExtra("PlaylistId", adap.getPlaylists().get(position).getPlaylistId());
                 intent.putExtra("PlaylistName", adap.getPlaylists().get(position).getName());
+                intent.putExtra("PlaylistArtist", adap.getPlaylists().get(position).getPlaylistArtist());
+                intent.putExtra("PlaylistIcon", adap.getPlaylists().get(position).getPathIcon());
                 startActivity(intent);
             }
         });
