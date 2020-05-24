@@ -73,13 +73,9 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
-
-//        playlists = Playlist.createPlaylistsList(15, "playlist_icon.png", "Playlist");
         favorites = Playlist.createFavoritesList();
 
         playlistRV = findViewById(R.id.mainRecycler);
-//        PlaylistAdapter adapter = new PlaylistAdapter(playlists);
         playlistAdapter.setPlaylists(songsPlaylist);
         setPlaylistListenerClick(playlistAdapter);
         playlistRV.setAdapter(playlistAdapter);
@@ -125,28 +121,22 @@ public class HomeActivity extends AppCompatActivity {
         adap.setOnItemClickListener(new PlaylistAdapter.OnItemClickListener(){
             @Override
             public void onItemClick(View view, int position) {
-                TextView tv = findViewById(R.id.title);
-                System.out.println("Playlist : " + tv.getText());
                 Intent intent = new Intent(getApplicationContext(), PlaylistActivity.class);
-                intent.putExtra("PlaylistId", adap.getPlaylists().get(position).getPlaylistId());
-                intent.putExtra("PlaylistName", adap.getPlaylists().get(position).getName());
-                intent.putExtra("PlaylistArtist", adap.getPlaylists().get(position).getPlaylistArtist());
-                intent.putExtra("PlaylistIcon", adap.getPlaylists().get(position).getPathIcon());
+                intent.putExtra("Playlist", adap.getPlaylists().get(position));
                 startActivity(intent);
             }
         });
     }
 
-    private void setMusicListenerClick(SongAdapter adap){
-        adap.setOnItemClickListener(new SongAdapter.OnItemClickListener(){
+    public void setMusicListenerClick(final SongAdapter adap){
+        // TODO : maybe find a way to refactor this because its the same code as in PlaylistActivity.setMusicClickListener()
+        adap.setOnItemClickListener(new SongAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                TextView tv = findViewById(R.id.title);
-                System.out.println("Music : " + tv.getText());
                 Intent intent = new Intent(getApplicationContext() , PlayerActivity.class);
-                intent.putExtra("MusicName", songAdapter.getMusics().get(position).getMusicName());
-                intent.putExtra("MusicArtist", songAdapter.getMusics().get(position).getArtist());
-                intent.putExtra("isLiked", songAdapter.getMusics().get(position).isLiked());
+                intent.putExtra("MusicIndex", position);
+                intent.putExtra("MusicsList", (ArrayList<Song>) adap.getMusics());
+                intent.putExtra("PlaylistName", "Musics"); // TODO : deal with "Récents" and "Historique" -> they are currently the same
                 startActivity(intent);
             }
         });
