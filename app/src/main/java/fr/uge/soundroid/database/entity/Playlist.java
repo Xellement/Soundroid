@@ -15,12 +15,13 @@ import androidx.room.PrimaryKey;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Entity(indices = {
         @Index(value = "name", unique = true)
 })
-public class Playlist {
+public class Playlist implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public long playlistId;
 
@@ -56,7 +57,7 @@ public class Playlist {
     }
 
     public Playlist(String name, int type, String artist) {
-        this(name, DEFAULT_ICON, type, DEFAULT_ARTIST);
+        this(name, DEFAULT_ICON, type, artist);
     }
 
     public Playlist(String name, String pathIcon, int type, String artist) {
@@ -119,6 +120,8 @@ public class Playlist {
         return "id: " + playlistId + " - name: " + playlistName;
     }
 
+
+    // TODO : c'est pas tres joli ca
     public static ArrayList<Playlist> createFavoritesList() {
         ArrayList<Playlist> favorites = new ArrayList<>();
         favorites.add(new Playlist("Playlist", "playlist_icon.png", 0));
