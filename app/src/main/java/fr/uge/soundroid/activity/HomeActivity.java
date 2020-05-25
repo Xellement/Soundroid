@@ -123,6 +123,9 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getApplicationContext(), PlaylistActivity.class);
                 intent.putExtra("Playlist", adap.getPlaylists().get(position));
+                intent.putExtra("BackActivity", "HOME");
+                intent.putExtra("HomeStatus","Playlist");
+                intent.putExtra("HomePlaylistID",adap.getPlaylists().get(position).playlistId);
                 startActivity(intent);
             }
         });
@@ -137,6 +140,8 @@ public class HomeActivity extends AppCompatActivity {
                 intent.putExtra("MusicIndex", position);
                 intent.putExtra("MusicsList", (ArrayList<Song>) adap.getMusics());
                 intent.putExtra("PlaylistName", "Musics"); // TODO : deal with "Récents" and "Historique" -> they are currently the same
+                intent.putExtra("BackActivity", "HOME");
+                intent.putExtra("HomeStatus","Recents");
                 startActivity(intent);
             }
         });
