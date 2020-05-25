@@ -318,6 +318,22 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         initMediaPlayer();
     }
 
+    public int playMusicFile(String path) {
+        player = new MediaPlayer();
+        try {
+            player.setDataSource(path);
+            player.prepare();
+            player.start();
+        } catch (IOException e) {
+            Log.e("IOException", "Cannot open specified music song from path : " + path) ;
+        }
+        return player.getDuration();
+    }
+
+    public void seekTo(int ms) {
+        player.seekTo(ms);
+    }
+
     //Handle incoming phone calls
     private void callStateListener() {
         // Get the telephony manager

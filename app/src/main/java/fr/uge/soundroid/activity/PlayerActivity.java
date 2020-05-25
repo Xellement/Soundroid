@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,26 @@ public class PlayerActivity extends AppCompatActivity {
         ((ImageView) findViewById(R.id.likeButton))
                 .setImageBitmap(song.getBitmapLike(getApplicationContext()));
         Log.d("PlayerActivity", playlist.toString());
+
+        final SeekBar seekBar = findViewById(R.id.musicProgress);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int songProgress;
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                songProgress = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                player.seekTo(songProgress);
+            }
+        });
+
         playAudio(songIndex, playlist);
     }
 
