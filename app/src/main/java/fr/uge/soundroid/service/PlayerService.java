@@ -285,7 +285,7 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         }
     }
 
-    private void skipToNext() {
+    public void skipToNext() {
 
         if (currentSongIndex == songs.size() - 1) {
             //if last in playlist
@@ -301,7 +301,7 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         initMediaPlayer();
     }
 
-    private void skipToPrevious() {
+    public void skipToPrevious() {
 
         if (currentSongIndex == 0) {
             //if first in playlist

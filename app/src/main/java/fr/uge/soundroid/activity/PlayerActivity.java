@@ -30,26 +30,50 @@ public class PlayerActivity extends AppCompatActivity {
     private int songPosition;
     public static final String Broadcast_PLAY_NEW_AUDIO = "fr.uge.soundroid.activity.PlayNewAudio";
     private boolean playing;
+    private Intent intent;
+    private Song song;
+    private int songIndex;
+    private SeekBar seekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-        // TODO : use PlayerService to play the musics
-        Intent intent = getIntent();
-        int songIndex = intent.getIntExtra("MusicIndex", 0);
-        final List<Song> playlist = (ArrayList<Song>) intent.getSerializableExtra("MusicsList");
-        final Song song = playlist.get(songIndex);
-        String playlistName = intent.getStringExtra("PlaylistName");
-        ((TextView) findViewById(R.id.musicName)).setText(song.getMusicName());
-        ((TextView) findViewById(R.id.musicArtist)).setText(song.getArtist());
-        ((TextView) findViewById(R.id.playlistNameIcon)).setText(playlistName);
-        ((TextView) findViewById(R.id.endTimer)).setText(convertMsToMinutes((int) song.getSongDuration()));
-        ((ImageView) findViewById(R.id.likeButton))
-                .setImageBitmap(song.getBitmapLike(getApplicationContext()));
-        Log.d("PlayerActivity", playlist.toString());
+        intent = getIntent();
+        songIndex = intent.getIntExtra("MusicIndex", 0);
 
-        final ImageView playPauseButton = ((ImageView) findViewById(R.id.playButton));
+        final List<Song> playlist = (ArrayList<Song>) intent.getSerializableExtra("MusicsList");
+        final String playlistName = intent.getStringExtra("PlaylistName");
+        seekBar = findViewById(R.id.musicProgress);
+        song = refreshActivity(playlist, songIndex, playlistName);
+
+        findViewById(R.id.nextButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (songIndex == playlist.size() - 1) {
+                    songIndex = 0;
+                } else {
+                    songIndex++;
+                }
+                player.skipToNext();
+                refreshActivity(playlist, songIndex, playlistName);
+            }
+        });
+
+        findViewById(R.id.prevButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (songIndex == 0) {
+                    player.seekTo(0);
+                } else {
+                    songIndex--;
+                    player.skipToPrevious();
+                }
+                refreshActivity(playlist, songIndex, playlistName);
+            }
+        });
+
+        final ImageView playPauseButton = findViewById(R.id.playButton);
         playPauseButton.setImageResource(R.drawable.pause);
         playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +90,7 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
-        final SeekBar seekBar = findViewById(R.id.musicProgress);
+        seekBar = findViewById(R.id.musicProgress);
         seekBar.setMax((int) (song.getSongDuration()));
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int songProgress;
@@ -111,7 +135,6 @@ public class PlayerActivity extends AppCompatActivity {
             }
         }.start();
 
-
         playAudio(songIndex, playlist);
         playing = true;
     }
@@ -127,6 +150,18 @@ public class PlayerActivity extends AppCompatActivity {
         long minutes = (ms / 1000) / 60;
         long seconds = (ms / 1000) % 60;
         return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    private Song refreshActivity(List<Song> playlist, int songIndex, String playlistName) {
+        Song song = playlist.get(songIndex);
+        ((TextView) findViewById(R.id.musicName)).setText(song.getMusicName());
+        ((TextView) findViewById(R.id.musicArtist)).setText(song.getArtist());
+        ((TextView) findViewById(R.id.playlistNameIcon)).setText(playlistName);
+        ((TextView) findViewById(R.id.endTimer)).setText(convertMsToMinutes((int) song.getSongDuration()));
+        ((ImageView) findViewById(R.id.likeButton)).setImageBitmap(song.getBitmapLike(getApplicationContext()));
+        seekBar.setProgress(0);
+        songPosition = 0;
+        return song;
     }
 
     //Binding this Client to the AudioPlayer Service

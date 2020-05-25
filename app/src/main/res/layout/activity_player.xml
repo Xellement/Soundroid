@@ -99,7 +99,7 @@
         app:srcCompat="@drawable/play" />
 
     <ImageView
-        android:id="@+id/newtButton"
+        android:id="@+id/nextButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="64dp"
