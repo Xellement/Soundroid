@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class PlayerActivity extends AppCompatActivity {
     private boolean serviceBound = false;
     private int songPosition;
     public static final String Broadcast_PLAY_NEW_AUDIO = "fr.uge.soundroid.activity.PlayNewAudio";
+    private boolean playing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class PlayerActivity extends AppCompatActivity {
         // TODO : use PlayerService to play the musics
         Intent intent = getIntent();
         int songIndex = intent.getIntExtra("MusicIndex", 0);
-        List<Song> playlist = (ArrayList<Song>) intent.getSerializableExtra("MusicsList");
+        final List<Song> playlist = (ArrayList<Song>) intent.getSerializableExtra("MusicsList");
         final Song song = playlist.get(songIndex);
         String playlistName = intent.getStringExtra("PlaylistName");
         ((TextView) findViewById(R.id.musicName)).setText(song.getMusicName());
@@ -47,28 +49,24 @@ public class PlayerActivity extends AppCompatActivity {
                 .setImageBitmap(song.getBitmapLike(getApplicationContext()));
         Log.d("PlayerActivity", playlist.toString());
 
-        final SeekBar seekBar = findViewById(R.id.musicProgress);
-        new Thread() {
+        final ImageView playPauseButton = ((ImageView) findViewById(R.id.playButton));
+        playPauseButton.setImageResource(R.drawable.pause);
+        playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                songPosition = 0;
-                while (songPosition < song.getSongDuration()) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    songPosition += 1000;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ((TextView) findViewById(R.id.actualTimer)).setText(convertMsToMinutes(songPosition));
-                            seekBar.setProgress(songPosition);
-                        }
-                    });
+            public void onClick(View v) {
+                if (playing) {
+                    player.pauseSong();
+                    playPauseButton.setImageResource(R.drawable.play);
+                    playing = false;
+                } else {
+                    player.resumeSong();
+                    playPauseButton.setImageResource(R.drawable.pause);
+                    playing = true;
                 }
             }
-        }.start();
+        });
+
+        final SeekBar seekBar = findViewById(R.id.musicProgress);
         seekBar.setMax((int) (song.getSongDuration()));
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int songProgress;
@@ -89,7 +87,33 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
+        new Thread() {
+            @Override
+            public void run() {
+                songPosition = 0;
+                while (songPosition < song.getSongDuration()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (playing) {
+                        songPosition += 1000;
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((TextView) findViewById(R.id.actualTimer)).setText(convertMsToMinutes(songPosition));
+                            seekBar.setProgress(songPosition);
+                        }
+                    });
+                }
+            }
+        }.start();
+
+
         playAudio(songIndex, playlist);
+        playing = true;
     }
 
     @SuppressLint("DefaultLocale")

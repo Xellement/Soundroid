@@ -271,14 +271,14 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         }
     }
 
-    private void pauseSong() {
+    public void pauseSong() {
         if (player.isPlaying()) {
             player.pause();
             resumePosition = player.getCurrentPosition();
         }
     }
 
-    private void resumeSong() {
+    public void resumeSong() {
         if (! player.isPlaying()) {
             player.seekTo(resumePosition);
             player.start();
