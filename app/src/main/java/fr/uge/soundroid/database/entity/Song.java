@@ -105,6 +105,8 @@ public class Song implements Serializable {
         return albumName;
     }
 
+    public long getSongDuration() { return songDuration; }
+
     public boolean isLiked() {
         return liked;
     }

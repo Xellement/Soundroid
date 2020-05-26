@@ -265,34 +265,34 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
         return START_STICKY;
     }
 
-    private void playSong() {
+    public void playSong() {
         if (! player.isPlaying()) {
             player.start();
         }
     }
 
-    private void stopSong() {
+    public void stopSong() {
         if (player == null) return;
         if (player.isPlaying()) {
             player.stop();
         }
     }
 
-    private void pauseSong() {
+    public void pauseSong() {
         if (player.isPlaying()) {
             player.pause();
             resumePosition = player.getCurrentPosition();
         }
     }
 
-    private void resumeSong() {
+    public void resumeSong() {
         if (! player.isPlaying()) {
             player.seekTo(resumePosition);
             player.start();
         }
     }
 
-    private void changeSong() {
+    public void changeSong() {
         if (player == null) return;
         if (player.isPlaying()) {
             player.stop();
@@ -307,7 +307,7 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
         player.prepareAsync();
     }
 
-    private void skipToNext() {
+    public void skipToNext() {
 
         if (currentSongIndex == songs.size() - 1) {
             //if last in playlist
@@ -323,7 +323,7 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
         initMediaPlayer();
     }
 
-    private void skipToPrevious() {
+    public void skipToPrevious() {
 
         if (currentSongIndex == 0) {
             //if first in playlist
@@ -338,6 +338,10 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
         //reset mediaPlayer
         player.reset();
         initMediaPlayer();
+    }
+
+    public void seekTo(int ms) {
+        player.seekTo(ms);
     }
 
     //Handle incoming phone calls
