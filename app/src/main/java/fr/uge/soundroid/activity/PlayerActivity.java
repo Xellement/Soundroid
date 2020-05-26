@@ -29,10 +29,10 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-        // TODO : use PlayerService to play the musics
         Intent intent = getIntent();
         int songIndex = intent.getIntExtra("MusicIndex", 0);
         List<Song> playlist = (ArrayList<Song>) intent.getSerializableExtra("MusicsList");
+        boolean alreadyPlaying = intent.getBooleanExtra("AlreadyPlaying", false);
         Song song = playlist.get(songIndex);
         String playlistName = intent.getStringExtra("PlaylistName");
         ((TextView) findViewById(R.id.musicName)).setText(song.getMusicName());
@@ -41,10 +41,12 @@ public class PlayerActivity extends AppCompatActivity {
         ((ImageView) findViewById(R.id.likeButton))
                 .setImageBitmap(song.getBitmapLike(getApplicationContext()));
         Log.d("PlayerActivity", playlist.toString());
-        playAudio(songIndex, playlist);
+        if (!alreadyPlaying) {
+            playAudio(songIndex, playlist);
+        }
     }
 
-    //Binding this Client to the AudioPlayer Service
+    //Binding this Client to the MediaPlayer Service
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -59,11 +61,12 @@ public class PlayerActivity extends AppCompatActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             serviceBound = false;
+            Toast.makeText(PlayerActivity.this, "Service Unbound", Toast.LENGTH_SHORT).show();
         }
     };
 
     private void playAudio(int songIndex, List<Song> playlist) {
-        //Check is service is active
+        //Check if service is active
         if (!serviceBound) {
             Intent playerIntent = new Intent(this, PlayerService.class);
             playerIntent.putExtra("SongIndex", songIndex);
@@ -73,7 +76,6 @@ public class PlayerActivity extends AppCompatActivity {
         } else {
             //Service is active
             //Send a broadcast to the service -> PLAY_NEW_AUDIO
-            Log.d("BROADCAST SENT", playlist.toString());
             Intent broadcastIntent = new Intent(Broadcast_PLAY_NEW_AUDIO);
             broadcastIntent.putExtra("SongIndex", songIndex);
             broadcastIntent.putExtra("Playlist", (ArrayList<Song>) playlist);
@@ -96,12 +98,10 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //TODO : find how we should handle this
-        // -> player is stopped when we kill activity
+        Log.d("Destroy", "Destroying activity");
         if (serviceBound) {
+            Log.d("destroy", "Should unbind service");
             unbindService(serviceConnection);
-            //service is active
-            player.stopSelf();
         }
     }
 }
