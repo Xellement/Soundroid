@@ -137,6 +137,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent.putExtra("MusicIndex", position);
                 intent.putExtra("MusicsList", (ArrayList<Song>) adap.getMusics());
                 intent.putExtra("PlaylistName", "Musics"); // TODO : deal with "Récents" and "Historique" -> they are currently the same
+                intent.putExtra("AlreadyPlaying", false);
                 startActivity(intent);
             }
         });
