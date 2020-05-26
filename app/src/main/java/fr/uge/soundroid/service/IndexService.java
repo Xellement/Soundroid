@@ -62,7 +62,6 @@ public class IndexService {
                 String album = mtr.extractMetadata(METADATA_KEY_ALBUM);
                 String genre = mtr.extractMetadata(METADATA_KEY_GENRE);
                 String duration = mtr.extractMetadata(METADATA_KEY_DURATION);
-                byte[] picture = mtr.getEmbeddedPicture();
                 // TODO : should we index songs that doesn't have metadata ?
                 if (title == null) continue;
 
@@ -70,6 +69,7 @@ public class IndexService {
                 artist = (artist == null) ? "Unknown artist" : artist;
                 album = (album == null) ? "Unknown album" : album;
                 genre = (genre == null) ? "Unknown genre" : genre;
+                byte[] picture = mtr.getEmbeddedPicture();
 
                 String s = title + artist + album + genre + duration;
                 final String songHash = String.valueOf(s.hashCode());
