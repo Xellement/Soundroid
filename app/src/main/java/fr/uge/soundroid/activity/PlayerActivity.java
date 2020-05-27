@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
@@ -29,21 +30,27 @@ public class PlayerActivity extends AppCompatActivity {
     private boolean serviceBound = false;
     private int songPosition;
     public static final String Broadcast_PLAY_NEW_AUDIO = "fr.uge.soundroid.activity.PlayNewAudio";
-    private boolean playing;
     private Intent intent;
     private Song song;
     private int songIndex;
+    private boolean playing;
     private SeekBar seekBar;
+    private Handler handler;
+    private String playlistName;
+    private List<Song> playlist;
+    private ImageView playPauseButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-        Intent intent = getIntent();
+        handler = new Handler();
+
+        intent = getIntent();
         songIndex = intent.getIntExtra("MusicIndex", 0);
-        final List<Song> playlist = (ArrayList<Song>) intent.getSerializableExtra("MusicsList");
+        playlist = (ArrayList<Song>) intent.getSerializableExtra("MusicsList");
         boolean alreadyPlaying = intent.getBooleanExtra("AlreadyPlaying", false);
-        final String playlistName = intent.getStringExtra("PlaylistName");
+        playlistName = intent.getStringExtra("PlaylistName");
         seekBar = findViewById(R.id.musicProgress);
         song = refreshActivity(playlist, songIndex, playlistName);
         ((ImageView) findViewById(R.id.likeButton))
@@ -58,8 +65,8 @@ public class PlayerActivity extends AppCompatActivity {
                 } else {
                     songIndex++;
                 }
-                player.skipToNext();
                 refreshActivity(playlist, songIndex, playlistName);
+                player.skipToNext();
             }
         });
 
@@ -68,15 +75,16 @@ public class PlayerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (songIndex == 0) {
                     player.seekTo(0);
+                    refreshActivity(playlist, songIndex, playlistName);
                 } else {
                     songIndex--;
+                    refreshActivity(playlist, songIndex, playlistName);
                     player.skipToPrevious();
                 }
-                refreshActivity(playlist, songIndex, playlistName);
             }
         });
 
-        final ImageView playPauseButton = findViewById(R.id.playButton);
+        playPauseButton = findViewById(R.id.playButton);
         playPauseButton.setImageResource(R.drawable.pause);
         playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,38 +118,57 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 songPosition = songProgress;
+                ((TextView) findViewById(R.id.actualTimer)).setText(convertMsToMinutes(songPosition));
+                seekBar.setProgress(songPosition);
                 player.seekTo(songProgress);
             }
         });
-
-        new Thread() {
-            @Override
-            public void run() {
-                songPosition = 0;
-                while (songPosition < song.getSongDuration()) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (playing) {
-                        songPosition += 1000;
-                    }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ((TextView) findViewById(R.id.actualTimer)).setText(convertMsToMinutes(songPosition));
-                            seekBar.setProgress(songPosition);
-                        }
-                    });
-                }
-            }
-        }.start();
 
         if (!alreadyPlaying) {
             playAudio(songIndex, playlist);
         }
         playing = true;
+    }
+
+    private Runnable increaseTimer = new Runnable() {
+        @Override
+        public void run() {
+            if (songPosition >= song.getSongDuration()) {
+                if (songIndex < playlist.size() - 1) {
+                    songIndex++;
+                }
+                else {
+                    songIndex = 0;
+                }
+                refreshActivity(playlist, songIndex, playlistName);
+            }
+            else if (playing) {
+                songPosition += 1000;
+            }
+            handler.postDelayed(getAndIncreaseTimer(), 1000);
+        }
+    };
+
+    private Runnable getAndIncreaseTimer() {
+        updateSeekBar();
+        return increaseTimer;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        increaseTimer.run();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        handler.removeCallbacks(increaseTimer);
+    }
+
+    private void updateSeekBar() {
+        ((TextView) findViewById(R.id.actualTimer)).setText(convertMsToMinutes(songPosition));
+        seekBar.setProgress(songPosition);
     }
 
     @SuppressLint("DefaultLocale")
@@ -158,36 +185,21 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private Song refreshActivity(List<Song> playlist, int songIndex, String playlistName) {
-        Song song = playlist.get(songIndex);
+        song = playlist.get(songIndex);
         ((TextView) findViewById(R.id.musicName)).setText(song.getMusicName());
         ((TextView) findViewById(R.id.musicArtist)).setText(song.getArtist());
         ((TextView) findViewById(R.id.playlistNameIcon)).setText(playlistName);
 
         ((TextView) findViewById(R.id.endTimer)).setText(convertMsToMinutes((int) song.getSongDuration()));
         ((ImageView) findViewById(R.id.likeButton)).setImageBitmap(song.getBitmapLike(getApplicationContext()));
-        seekBar.setProgress(0);
+        if (playing) {
+            playPauseButton.setImageResource(R.drawable.pause);
+        }
         songPosition = 0;
+        updateSeekBar();
+        seekBar.setMax((int) (song.getSongDuration()));
         return song;
     }
-
-    //Binding this Client to the MediaPlayer Service
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            PlayerService.LocalBinder binder = (PlayerService.LocalBinder) service;
-            player = binder.getService();
-            serviceBound = true;
-
-            Toast.makeText(PlayerActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            serviceBound = false;
-            Toast.makeText(PlayerActivity.this, "Service Unbound", Toast.LENGTH_SHORT).show();
-        }
-    };
 
     private void playAudio(int songIndex, List<Song> playlist) {
         //Check if service is active
@@ -228,4 +240,23 @@ public class PlayerActivity extends AppCompatActivity {
             unbindService(serviceConnection);
         }
     }
+
+    //Binding this Client to the MediaPlayer Service
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            PlayerService.LocalBinder binder = (PlayerService.LocalBinder) service;
+            player = binder.getService();
+            serviceBound = true;
+
+            Toast.makeText(PlayerActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceBound = false;
+            Toast.makeText(PlayerActivity.this, "Service Unbound", Toast.LENGTH_SHORT).show();
+        }
+    };
 }

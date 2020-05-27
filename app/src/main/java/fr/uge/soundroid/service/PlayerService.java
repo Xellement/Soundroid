@@ -19,7 +19,6 @@ import android.media.session.MediaSessionManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -155,10 +154,7 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        //Invoked when playback of a media source has completed.
-        stopSong();
-        //stop the service
-        stopSelf();
+        skipToNext();
     }
 
     @Override
@@ -246,13 +242,8 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
             stopSelf();
         }
         if (mediaSessionManager == null) {
-            try {
-                initMediaSession();
-                initMediaPlayer();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-                stopSelf();
-            }
+            initMediaSession();
+            initMediaPlayer();
             buildNotification(PlaybackStatus.PLAYING);
         }
         if (intent.getAction() != null) {
@@ -338,6 +329,10 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
         //reset mediaPlayer
         player.reset();
         initMediaPlayer();
+    }
+
+    public boolean isPlaying() {
+        return player.isPlaying();
     }
 
     public void seekTo(int ms) {
@@ -430,7 +425,7 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
     }
 
     @SuppressLint("NewApi")
-    private void initMediaSession() throws RemoteException {
+    private void initMediaSession() {
         if (mediaSessionManager != null) return; //mediaSessionManager exists
 
         mediaSessionManager = (MediaSessionManager) getSystemService(Context.MEDIA_SESSION_SERVICE);
