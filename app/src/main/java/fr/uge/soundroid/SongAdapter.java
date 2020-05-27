@@ -40,6 +40,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>{
             iconMusic = itemView.findViewById(R.id.iconMusic);
             iconLike = itemView.findViewById(R.id.iconLike);
 
+            System.out.println("TAILLE : " + musicName.getTextSize());
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

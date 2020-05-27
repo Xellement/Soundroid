@@ -29,26 +29,29 @@
             android:id="@+id/MusicName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="marquee"
             android:fontFamily="@font/montserrat"
+            android:singleLine="true"
             android:text="TextView"
             android:textColor="#FDE6E6"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/MusicArtist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="marquee"
             android:fontFamily="@font/montserrat"
+            android:singleLine="true"
             android:text="TextView"
             android:textColor="#9A9494"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/iconLike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_weight="0.05"
         android:adjustViewBounds="true"
         android:cropToPadding="false"

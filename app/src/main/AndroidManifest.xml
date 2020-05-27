@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.uge.soundroid">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
@@ -12,20 +15,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".activity.StartActivity">
+        <activity android:name=".activity.SearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.StartActivity">
 
+        </activity>
         <activity android:name=".activity.PlaylistActivity" />
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.PlayerActivity" />
+
         <service android:name=".service.PlayerService" />
 
-        <receiver android:name="androidx.media.session.MediaButtonReceiver" >
+        <receiver android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
