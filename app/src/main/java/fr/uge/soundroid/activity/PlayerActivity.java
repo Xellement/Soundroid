@@ -57,72 +57,15 @@ public class PlayerActivity extends AppCompatActivity {
                 .setImageBitmap(song.getBitmapLike(getApplicationContext()));
         Log.d("PlayerActivity", playlist.toString());
 
-        findViewById(R.id.nextButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (songIndex == playlist.size() - 1) {
-                    songIndex = 0;
-                } else {
-                    songIndex++;
-                }
-                refreshActivity(playlist, songIndex, playlistName);
-                player.skipToNext();
-            }
-        });
-
-        findViewById(R.id.prevButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (songIndex == 0) {
-                    player.seekTo(0);
-                    refreshActivity(playlist, songIndex, playlistName);
-                } else {
-                    songIndex--;
-                    refreshActivity(playlist, songIndex, playlistName);
-                    player.skipToPrevious();
-                }
-            }
-        });
-
+        findViewById(R.id.nextButton).setOnClickListener(onClickNext());
+        findViewById(R.id.prevButton).setOnClickListener(onClickPrevious());
         playPauseButton = findViewById(R.id.playButton);
         playPauseButton.setImageResource(R.drawable.pause);
-        playPauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (playing) {
-                    player.pauseSong();
-                    playPauseButton.setImageResource(R.drawable.play);
-                    playing = false;
-                } else {
-                    player.resumeSong();
-                    playPauseButton.setImageResource(R.drawable.pause);
-                    playing = true;
-                }
-            }
-        });
+        playPauseButton.setOnClickListener(onClickPlayPause());
 
         seekBar = findViewById(R.id.musicProgress);
         seekBar.setMax((int) (song.getSongDuration()));
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int songProgress;
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                songProgress = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // noop
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                songPosition = songProgress;
-                ((TextView) findViewById(R.id.actualTimer)).setText(convertMsToMinutes(songPosition));
-                seekBar.setProgress(songPosition);
-                player.seekTo(songProgress);
-            }
-        });
+        seekBar.setOnSeekBarChangeListener(onSeekBarChanged());
 
         if (!alreadyPlaying) {
             playAudio(songIndex, playlist);
@@ -154,6 +97,76 @@ public class PlayerActivity extends AppCompatActivity {
         return increaseTimer;
     }
 
+    private SeekBar.OnSeekBarChangeListener onSeekBarChanged() {
+        return new SeekBar.OnSeekBarChangeListener() {
+            int songProgress;
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                songProgress = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // noop
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                songPosition = songProgress;
+                ((TextView) findViewById(R.id.actualTimer)).setText(convertMsToMinutes(songPosition));
+                seekBar.setProgress(songPosition);
+                player.seekTo(songProgress);
+            }
+        };
+    }
+    private View.OnClickListener onClickPlayPause() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (playing) {
+                    player.pauseSong();
+                    playPauseButton.setImageResource(R.drawable.play);
+                    playing = false;
+                } else {
+                    player.resumeSong();
+                    playPauseButton.setImageResource(R.drawable.pause);
+                    playing = true;
+                }
+            }
+        };
+    }
+
+    private View.OnClickListener onClickNext() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (songIndex == playlist.size() - 1) {
+                    songIndex = 0;
+                } else {
+                    songIndex++;
+                }
+                refreshActivity(playlist, songIndex, playlistName);
+                player.skipToNext();
+            }
+        };
+    }
+
+    private View.OnClickListener onClickPrevious() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (songIndex == 0) {
+                    player.seekTo(0);
+                    refreshActivity(playlist, songIndex, playlistName);
+                } else {
+                    songIndex--;
+                    refreshActivity(playlist, songIndex, playlistName);
+                    player.skipToPrevious();
+                }
+            }
+        };
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -169,19 +182,6 @@ public class PlayerActivity extends AppCompatActivity {
     private void updateSeekBar() {
         ((TextView) findViewById(R.id.actualTimer)).setText(convertMsToMinutes(songPosition));
         seekBar.setProgress(songPosition);
-    }
-
-    @SuppressLint("DefaultLocale")
-    private String convertMsToMinutes(int ms) {
-        if (ms > 3600000) {
-            return String.format("%02d:%02d:%02d",
-                    TimeUnit.MILLISECONDS.toHours(ms),
-                    TimeUnit.MILLISECONDS.toMinutes(ms) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(ms)),
-                    TimeUnit.MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(ms)));
-        }
-        long minutes = (ms / 1000) / 60;
-        long seconds = (ms / 1000) % 60;
-        return String.format("%02d:%02d", minutes, seconds);
     }
 
     private Song refreshActivity(List<Song> playlist, int songIndex, String playlistName) {
@@ -259,4 +259,17 @@ public class PlayerActivity extends AppCompatActivity {
             Toast.makeText(PlayerActivity.this, "Service Unbound", Toast.LENGTH_SHORT).show();
         }
     };
+
+    @SuppressLint("DefaultLocale")
+    private String convertMsToMinutes(int ms) {
+        if (ms > 3600000) {
+            return String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(ms),
+                    TimeUnit.MILLISECONDS.toMinutes(ms) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(ms)),
+                    TimeUnit.MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(ms)));
+        }
+        long minutes = (ms / 1000) / 60;
+        long seconds = (ms / 1000) % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
 }
