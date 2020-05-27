@@ -30,7 +30,6 @@ public class PlayerActivity extends AppCompatActivity {
     private boolean serviceBound = false;
     private int songPosition;
     public static final String Broadcast_PLAY_NEW_AUDIO = "fr.uge.soundroid.activity.PlayNewAudio";
-    private Intent intent;
     private Song song;
     private int songIndex;
     private boolean playing;
@@ -46,15 +45,13 @@ public class PlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_player);
         handler = new Handler();
 
-        intent = getIntent();
+        Intent intent = getIntent();
         songIndex = intent.getIntExtra("MusicIndex", 0);
         playlist = (ArrayList<Song>) intent.getSerializableExtra("MusicsList");
         boolean alreadyPlaying = intent.getBooleanExtra("AlreadyPlaying", false);
         playlistName = intent.getStringExtra("PlaylistName");
         seekBar = findViewById(R.id.musicProgress);
-        song = refreshActivity(playlist, songIndex, playlistName);
-        ((ImageView) findViewById(R.id.likeButton))
-                .setImageBitmap(song.getBitmapLike(getApplicationContext()));
+        song = refreshActivity(playlist.get(songIndex), playlist, 0);
         Log.d("PlayerActivity", playlist.toString());
 
         findViewById(R.id.nextButton).setOnClickListener(onClickNext());
@@ -77,13 +74,8 @@ public class PlayerActivity extends AppCompatActivity {
         @Override
         public void run() {
             if (songPosition >= song.getSongDuration()) {
-                if (songIndex < playlist.size() - 1) {
-                    songIndex++;
-                }
-                else {
-                    songIndex = 0;
-                }
-                refreshActivity(playlist, songIndex, playlistName);
+                player.skipToNext();
+                refreshActivity(player.getCurrentSong(), player.getPlaylist(), player.getPosition());
             }
             else if (playing) {
                 songPosition += 1000;
@@ -93,7 +85,20 @@ public class PlayerActivity extends AppCompatActivity {
     };
 
     private Runnable getAndIncreaseTimer() {
-        updateSeekBar();
+        Song tmpSong;
+        List<Song> tmpPlaylist;
+        int currentPos;
+        if (player != null) {
+            tmpSong = player.getCurrentSong();
+            tmpPlaylist = player.getPlaylist();
+            currentPos = player.getPosition();
+        }
+        else {
+            tmpSong = song;
+            tmpPlaylist = playlist;
+            currentPos = songPosition;
+        }
+        refreshActivity(tmpSong, tmpPlaylist, currentPos);
         return increaseTimer;
     }
 
@@ -140,13 +145,9 @@ public class PlayerActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (songIndex == playlist.size() - 1) {
-                    songIndex = 0;
-                } else {
-                    songIndex++;
-                }
-                refreshActivity(playlist, songIndex, playlistName);
                 player.skipToNext();
+                playing = true;
+                refreshActivity(player.getCurrentSong(), player.getPlaylist(), player.getPosition());
             }
         };
     }
@@ -157,11 +158,11 @@ public class PlayerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (songIndex == 0) {
                     player.seekTo(0);
-                    refreshActivity(playlist, songIndex, playlistName);
+                    refreshActivity(player.getCurrentSong(), player.getPlaylist(), player.getPosition());
                 } else {
-                    songIndex--;
-                    refreshActivity(playlist, songIndex, playlistName);
                     player.skipToPrevious();
+                    playing = true;
+                    refreshActivity(player.getCurrentSong(), player.getPlaylist(), player.getPosition());
                 }
             }
         };
@@ -184,18 +185,23 @@ public class PlayerActivity extends AppCompatActivity {
         seekBar.setProgress(songPosition);
     }
 
-    private Song refreshActivity(List<Song> playlist, int songIndex, String playlistName) {
-        song = playlist.get(songIndex);
-        ((TextView) findViewById(R.id.musicName)).setText(song.getMusicName());
-        ((TextView) findViewById(R.id.musicArtist)).setText(song.getArtist());
-        ((TextView) findViewById(R.id.playlistNameIcon)).setText(playlistName);
-
-        ((TextView) findViewById(R.id.endTimer)).setText(convertMsToMinutes((int) song.getSongDuration()));
-        ((ImageView) findViewById(R.id.likeButton)).setImageBitmap(song.getBitmapLike(getApplicationContext()));
+    private Song refreshActivity(Song currentSong, List<Song> currentPlaylist, int currentPosition) {
+        if (! currentSong.equals(song)) {
+            song = currentSong;
+            playlist = currentPlaylist;
+            ((TextView) findViewById(R.id.musicName)).setText(song.getMusicName());
+            ((TextView) findViewById(R.id.musicArtist)).setText(song.getArtist());
+            ((TextView) findViewById(R.id.playlistNameIcon)).setText(playlistName);
+            ((ImageView) findViewById(R.id.likeButton))
+                    .setImageBitmap(song.getBitmapLike(getApplicationContext()));
+            ((TextView) findViewById(R.id.endTimer)).setText(convertMsToMinutes((int) song.getSongDuration()));
+            ((ImageView) findViewById(R.id.likeButton)).setImageBitmap(song.getBitmapLike(getApplicationContext()));
+        }
+        Log.d("REFRESH", "Playing is " + playing);
         if (playing) {
             playPauseButton.setImageResource(R.drawable.pause);
         }
-        songPosition = 0;
+        songPosition = currentPosition;
         updateSeekBar();
         seekBar.setMax((int) (song.getSongDuration()));
         return song;

@@ -93,6 +93,15 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
         player.prepareAsync();
     }
 
+    public List<Song> getPlaylist() {
+        return songs;
+    }
+
+    public Song getCurrentSong() {
+        return currentSong;
+    }
+
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -154,7 +163,6 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        skipToNext();
     }
 
     @Override
@@ -273,6 +281,7 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
         if (player.isPlaying()) {
             player.pause();
             resumePosition = player.getCurrentPosition();
+            buildNotification(PlaybackStatus.PAUSED);
         }
     }
 
@@ -280,6 +289,7 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
         if (! player.isPlaying()) {
             player.seekTo(resumePosition);
             player.start();
+            buildNotification(PlaybackStatus.PLAYING);
         }
     }
 
@@ -312,6 +322,8 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
         //reset mediaPlayer
         player.reset();
         initMediaPlayer();
+        updateMetaData();
+        buildNotification(PlaybackStatus.PLAYING);
     }
 
     public void skipToPrevious() {
@@ -329,6 +341,8 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
         //reset mediaPlayer
         player.reset();
         initMediaPlayer();
+        updateMetaData();
+        buildNotification(PlaybackStatus.PLAYING);
     }
 
     public boolean isPlaying() {
@@ -337,6 +351,10 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
 
     public void seekTo(int ms) {
         player.seekTo(ms);
+    }
+
+    public int getPosition() {
+        return player.getCurrentPosition();
     }
 
     //Handle incoming phone calls
@@ -445,30 +463,24 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
             public void onPlay() {
                 super.onPlay();
                 resumeSong();
-                buildNotification(PlaybackStatus.PLAYING);
             }
 
             @Override
             public void onPause() {
                 super.onPause();
                 pauseSong();
-                buildNotification(PlaybackStatus.PAUSED);
             }
 
             @Override
             public void onSkipToNext() {
                 super.onSkipToNext();
                 skipToNext();
-                updateMetaData();
-                buildNotification(PlaybackStatus.PLAYING);
             }
 
             @Override
             public void onSkipToPrevious() {
                 super.onSkipToPrevious();
                 skipToPrevious();
-                updateMetaData();
-                buildNotification(PlaybackStatus.PLAYING);
             }
 
             @Override
