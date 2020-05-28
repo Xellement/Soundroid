@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import fr.uge.soundroid.R;
 import fr.uge.soundroid.database.entity.Song;
+import fr.uge.soundroid.database.viewmodel.SongViewModel;
 import fr.uge.soundroid.service.PlayerService;
 
 public class PlayerActivity extends AppCompatActivity {
@@ -38,12 +40,15 @@ public class PlayerActivity extends AppCompatActivity {
     private String playlistName;
     private List<Song> playlist;
     private ImageView playPauseButton;
+    private SongViewModel songViewModel;
+    private ImageView likeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         handler = new Handler();
+        songViewModel = ViewModelProviders.of(this).get(SongViewModel.class);
 
         Intent intent = getIntent();
         songIndex = intent.getIntExtra("MusicIndex", 0);
@@ -51,19 +56,17 @@ public class PlayerActivity extends AppCompatActivity {
         boolean alreadyPlaying = intent.getBooleanExtra("AlreadyPlaying", false);
         playlistName = intent.getStringExtra("PlaylistName");
         seekBar = findViewById(R.id.musicProgress);
+        likeButton = findViewById(R.id.likeButton);
+        playPauseButton = findViewById(R.id.playButton);
+        playPauseButton.setImageResource(R.drawable.pause);
         song = refreshActivity(playlist.get(songIndex), playlist, 0);
-        Log.d("PlayerActivity", playlist.toString());
 
         findViewById(R.id.nextButton).setOnClickListener(onClickNext());
         findViewById(R.id.prevButton).setOnClickListener(onClickPrevious());
-        playPauseButton = findViewById(R.id.playButton);
-        playPauseButton.setImageResource(R.drawable.pause);
         playPauseButton.setOnClickListener(onClickPlayPause());
-
-        seekBar = findViewById(R.id.musicProgress);
-        seekBar.setMax((int) (song.getSongDuration()));
         seekBar.setOnSeekBarChangeListener(onSeekBarChanged());
-
+        updateLikeButton();
+        likeButton.setOnClickListener(onClickLike());
         if (!alreadyPlaying) {
             playAudio(songIndex, playlist);
         }
@@ -168,6 +171,18 @@ public class PlayerActivity extends AppCompatActivity {
         };
     }
 
+    private View.OnClickListener onClickLike() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean liking = ! song.isLiked();
+                song.setLiked(liking);
+                songViewModel.update(song);
+                updateLikeButton();
+            }
+        };
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -196,9 +211,11 @@ public class PlayerActivity extends AppCompatActivity {
                     .setImageBitmap(song.getBitmapLike(getApplicationContext()));
             ((TextView) findViewById(R.id.endTimer)).setText(convertMsToMinutes((int) song.getSongDuration()));
             ((ImageView) findViewById(R.id.likeButton)).setImageBitmap(song.getBitmapLike(getApplicationContext()));
+            updateLikeButton();
         }
         Log.d("REFRESH", "Playing is " + playing);
-        if (playing) {
+        if (playing || (player != null && player.isPlaying()) ) {
+            playing = true;
             playPauseButton.setImageResource(R.drawable.pause);
         }
         songPosition = currentPosition;
@@ -222,6 +239,14 @@ public class PlayerActivity extends AppCompatActivity {
             broadcastIntent.putExtra("SongIndex", songIndex);
             broadcastIntent.putExtra("Playlist", (ArrayList<Song>) playlist);
             sendBroadcast(broadcastIntent);
+        }
+    }
+
+    private void updateLikeButton() {
+        if ((song.isLiked())) {
+            likeButton.setImageResource(R.drawable.like);
+        } else {
+            likeButton.setImageResource(R.drawable.nolike);
         }
     }
 
