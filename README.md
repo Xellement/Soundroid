@@ -9,7 +9,7 @@ The purpose of this project is to create a Music Player App for Android devices.
 
 Soundroid can search for the musics stored in the device, and index them into a persistent database. 
 Songs can be organize in playlists.
-By default, every song is add to :
+By default, every song is added to :
   - __a "main" playlist__ : all the songs found in the device
   - __an artist playlist__ : all the songs from a specific artist
   - __an album playlist__ : all the songs from a specific album
