@@ -74,7 +74,13 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         favorites = Playlist.createFavoritesList();
-
+        findViewById(R.id.searchButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent search = new Intent(getApplicationContext(), SearchActivity.class);
+                startActivity(search);
+            }
+        });
         playlistRV = findViewById(R.id.mainRecycler);
         playlistAdapter.setPlaylists(songsPlaylist);
         setPlaylistListenerClick(playlistAdapter);

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "45d0f9ec5e1cd1e480696746830c0248",
+    "identityHash": "646e76cf971fbb7ee8a24ff7df20a54d",
     "entities": [
       {
         "tableName": "Song",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`songId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `duration` INTEGER NOT NULL, `tag` TEXT, `liked` INTEGER NOT NULL, `artist_name` TEXT, `album_name` TEXT, `hash` TEXT, `path` TEXT, `icon_path` TEXT, `like_icon_path` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`songId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `duration` INTEGER NOT NULL, `tag` TEXT, `liked` INTEGER NOT NULL, `artist_name` TEXT, `album_name` TEXT, `hash` TEXT, `path` TEXT, `song_number` INTEGER NOT NULL, `icon_path` TEXT, `like_icon_path` TEXT)",
         "fields": [
           {
             "fieldPath": "songId",
@@ -61,6 +61,12 @@
             "columnName": "path",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "songNumber",
+            "columnName": "song_number",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "pathIcon",
@@ -208,7 +214,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '45d0f9ec5e1cd1e480696746830c0248')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '646e76cf971fbb7ee8a24ff7df20a54d')"
     ]
   }
 }

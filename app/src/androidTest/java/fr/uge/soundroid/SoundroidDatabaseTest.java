@@ -87,7 +87,7 @@ public class SoundroidDatabaseTest {
 
     @Test
     public void createSongAndLikeIt() throws InterruptedException {
-        Song song = new Song("Crying", 120, "music", "Johnny", "Time after Time", null, null);
+        Song song = new Song("Crying", 120, "music", "Johnny", "Time after Time", null, null, null, 0);
         song.songId = db.songDao().insert(song);
 
         assertFalse(song.liked);
@@ -100,13 +100,13 @@ public class SoundroidDatabaseTest {
 
     @Test
     public void createAndGetPlaylist() throws InterruptedException {
-        Song song = new Song("Crying", 120, "music", "Johnny", "Time after Time", null, null);
+        Song song = new Song("Crying", 120, "music", "Johnny", "Time after Time", null, null, null, 0);
         song.songId = db.songDao().insert(song);
 
-        Song song2 = new Song("Wait", 150, "mucis", "Lennon", "Imagination", null, null);
+        Song song2 = new Song("Wait", 150, "mucis", "Lennon", "Imagination", null, null, null, 0);
         song2.songId = db.songDao().insert(song2);
 
-        Playlist playlist = new Playlist("playlist1");
+        Playlist playlist = new Playlist("playlist1", 0);
         playlist.playlistId = db.playlistDao().insert(playlist);
         PlaylistSongsJoin playlistSongsJoin = new PlaylistSongsJoin(playlist.playlistId, song.songId);
         db.playlistSongsJoinDao().insert(playlistSongsJoin);
@@ -124,16 +124,16 @@ public class SoundroidDatabaseTest {
 
     @Test
     public void getArtistsAndAlbumsName() throws InterruptedException {
-        Song song1 = new Song("Crying", 120, "music", "Johnny", "Time after Time", null, null);
+        Song song1 = new Song("Crying", 120, "music", "Johnny", "Time after Time", null, null,null, 0);
         song1.songId = db.songDao().insert(song1);
 
-        Song song2 = new Song("Wait", 150, "mucis", "Lennon", "Imagination", null, null);
+        Song song2 = new Song("Wait", 150, "mucis", "Lennon", "Imagination", null, null, null, 0);
         song2.songId = db.songDao().insert(song2);
 
-        Song song3 = new Song("Hello", 90, "tag", "Unknown artist", "Unknown album", null, null);
+        Song song3 = new Song("Hello", 90, "tag", "Unknown artist", "Unknown album", null, null, null, 0);
         song3.songId = db.songDao().insert(song3);
 
-        Song song4 = new Song("Yo", 110, "tag", "Unknown artist", "Unknown album", null, null);
+        Song song4 = new Song("Yo", 110, "tag", "Unknown artist", "Unknown album", null, null, null, 0);
         song4.songId = db.songDao().insert(song4);
 
         List<String> artists = LiveDataTestUtil.getValue(db.songDao().getArtistsName());

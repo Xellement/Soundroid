@@ -50,8 +50,8 @@ public class StartActivity extends AppCompatActivity {
         if (arePermissionsDenied()) {
             ((ActivityManager) (this.getSystemService(ACTIVITY_SERVICE))).clearApplicationUserData();
             recreate();
-        } else {
-            onResume();
+//        } else {
+//            onResume();
         }
     }
 

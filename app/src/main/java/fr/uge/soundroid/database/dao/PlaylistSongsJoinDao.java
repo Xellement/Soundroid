@@ -28,10 +28,11 @@ public interface PlaylistSongsJoinDao {
     @Update
     void update(PlaylistSongsJoin playlistSongsJoin);
 
-    @Query("SELECT song.songId, title, duration, tag, liked, artist_name, album_name, hash, path, icon_path, like_icon_path " +
+    @Query("SELECT * " +
             "FROM song " +
             "INNER JOIN playlist_songs_join ON song.songId = playlist_songs_join.songId " +
-            "WHERE playlist_songs_join.playlistId = :playlistId")
+            "WHERE playlist_songs_join.playlistId = :playlistId " +
+            "ORDER BY song_number ASC")
     LiveData<List<Song>> getSongsFromPlaylist(long playlistId);
 
     @Query("SELECT playlist.playlistId, name, icon_path, playlist_type, playlist_artist FROM playlist " +

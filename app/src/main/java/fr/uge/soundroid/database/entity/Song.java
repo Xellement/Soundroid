@@ -46,6 +46,9 @@ public class Song implements Serializable {
     @ColumnInfo(name = "path")
     public String path;
 
+    @ColumnInfo(name = "song_number")
+    public int songNumber;
+
     @Ignore
     private transient Bitmap cachedIconBitmap;
     @Ignore
@@ -63,7 +66,7 @@ public class Song implements Serializable {
     public Song() {}
 
     public Song(String title, long duration, String tag, String artist, String album, String hash
-            , String path, byte[] picture) {
+            , String path, byte[] picture, int songNumber) {
         songTitle = title;
         songDuration = duration;
         songTag = tag;
@@ -73,7 +76,9 @@ public class Song implements Serializable {
         songHash = hash;
         liked = false;
         this.picture = picture;
+        this.songNumber = songNumber;
         pathIcon = "music_icon.png";
+        Log.d("createSong", "Created song " + songTitle + " n°" + songNumber + " album : " + albumName);
     }
 
     @Override
