@@ -21,3 +21,9 @@ Soundroid can start a background service to play the songs that have been indexe
 ### Search
 
 Soundroid allows to make simple searchs (song name, artist, album) into the songs that have been indexed.
+
+# Reports
+
+You can find :
+  - the development report here : [Rapport de développement](Rapport_developpement.pdf)
+  - the user report here : [Rapport utilisateur](Rapport_utilisateur.pdf)
