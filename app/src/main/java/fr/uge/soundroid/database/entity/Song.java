@@ -111,6 +111,10 @@ public class Song implements Serializable {
         return liked;
     }
 
+    public void setLiked(boolean like) {
+        liked = like;
+    }
+
     public String getPathIcon(){
         return pathIcon;
     }
