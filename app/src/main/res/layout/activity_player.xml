@@ -33,14 +33,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playlistNameIcon" />
 
-    <fr.uge.soundroid.customView.MusicRectangleIcon
+    <ImageView
         android:id="@+id/playlistIcon"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:srcCompat="@drawable/music_icon" />
 
     <TextView
         android:id="@+id/musicName"
@@ -98,7 +99,7 @@
         app:srcCompat="@drawable/play" />
 
     <ImageView
-        android:id="@+id/newtButton"
+        android:id="@+id/nextButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="64dp"
