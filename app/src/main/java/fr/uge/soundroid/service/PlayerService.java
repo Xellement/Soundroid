@@ -275,6 +275,7 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
         if (player.isPlaying()) {
             player.stop();
         }
+        stopSelf();
     }
 
     public void pauseSong() {
@@ -587,8 +588,8 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
                 // Add playback actions
                 .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", play_pauseAction)
-                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2))
-                .addAction(android.R.drawable.ic_menu_close_clear_cancel, "stop", playbackAction(4));
+                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
+//                .addAction(android.R.drawable.ic_menu_close_clear_cancel, "stop", playbackAction(4));
 
 //        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notificationBuilder.build());
         startForeground(NOTIFICATION_ID, notificationBuilder.build());
@@ -640,8 +641,8 @@ public class PlayerService extends Service implements Serializable, MediaPlayer.
             transportControls.skipToNext();
         } else if (actionString.equalsIgnoreCase(ACTION_PREVIOUS)) {
             transportControls.skipToPrevious();
-        } else if (actionString.equalsIgnoreCase(ACTION_STOP)) {
-            transportControls.stop();
+//        } else if (actionString.equalsIgnoreCase(ACTION_STOP)) {
+//            transportControls.stop();
         }
     }
 }
