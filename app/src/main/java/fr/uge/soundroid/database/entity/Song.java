@@ -74,7 +74,6 @@ public class Song implements Serializable {
         liked = false;
         this.picture = picture;
         pathIcon = "music_icon.png";
-        Log.d("SongCreation", "Created song " + songTitle + " - "  + this.path);
     }
 
     @Override
@@ -106,8 +105,14 @@ public class Song implements Serializable {
         return albumName;
     }
 
+    public long getSongDuration() { return songDuration; }
+
     public boolean isLiked() {
         return liked;
+    }
+
+    public void setLiked(boolean like) {
+        liked = like;
     }
 
     public String getPathIcon(){
@@ -132,11 +137,11 @@ public class Song implements Serializable {
     public Bitmap getBitmapIcon(Context context) {
         if (cachedIconBitmap == null) {
             if (picture != null) {
-                Log.d(songTitle, "Picture isnt null");
+//                Log.d(songTitle, "Picture isnt null");
                 cachedIconBitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
             }
             else {
-                Log.d(songTitle, "Picture is null");
+//                Log.d(songTitle, "Picture is null");
                 try (InputStream is = context.getAssets().open(pathIcon)) {
                     cachedIconBitmap = BitmapFactory.decodeStream(is);
                 } catch (IOException e) {

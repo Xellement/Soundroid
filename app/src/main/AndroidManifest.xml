@@ -15,22 +15,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.SearchActivity">
+        <activity android:name=".activity.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.StartActivity">
 
-        </activity>
+        <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.PlaylistActivity" />
         <activity android:name=".activity.HomeActivity" />
-        <activity android:name=".activity.PlayerActivity" />
+
+        <activity android:name=".activity.PlayerActivity"
+            android:parentActivityName=".activity.HomeActivity"/>
 
         <service android:name=".service.PlayerService" />
-
         <receiver android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />

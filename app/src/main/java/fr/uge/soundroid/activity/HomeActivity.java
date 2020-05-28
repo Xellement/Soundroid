@@ -142,6 +142,7 @@ public class HomeActivity extends AppCompatActivity {
                 intent.putExtra("PlaylistName", "Musics"); // TODO : deal with "Récents" and "Historique" -> they are currently the same
                 intent.putExtra("BackActivity", "HOME");
                 intent.putExtra("HomeStatus","Recents");
+                intent.putExtra("AlreadyPlaying", false);
                 startActivity(intent);
             }
         });

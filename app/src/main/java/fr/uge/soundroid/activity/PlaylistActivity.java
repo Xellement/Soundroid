@@ -60,6 +60,7 @@ public class PlaylistActivity extends AppCompatActivity {
                 intent.putExtra("MusicIndex", position);
                 intent.putExtra("MusicsList", (ArrayList<Song>) adapter.getMusics());
                 intent.putExtra("PlaylistName", playlist.getName());
+                intent.putExtra("AlreadyPlaying", false);
                 startActivity(intent);
             }
         });
