@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -80,10 +81,12 @@ public class SearchActivity extends AppCompatActivity {
                         searchByArtist(search);
                         break;
                     default:
+                        Toast.makeText(SearchActivity.this, "Please choose between Song Name, Artist and Album", Toast.LENGTH_SHORT)
+                                .show();
                         return;
                 }
                 searchType = -1;
-                updateSearchResult();
+//                updateSearchResult();
             }
         });
     }
@@ -103,6 +106,9 @@ public class SearchActivity extends AppCompatActivity {
             searchResult = new ArrayList<>(new HashSet<>(tmp));
             Log.d("result", searchResult.toString());
             searchResultAdapter.setMusicList(searchResult);
+        }
+        else {
+            Toast.makeText(this, "Search returned no result...", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -162,6 +168,7 @@ public class SearchActivity extends AppCompatActivity {
 
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
+        searchResultAdapter.setMusicList(new ArrayList<Song>());
         // Check which radio button was clicked
         switch(view.getId()) {
             case R.id.radioButtonSong:

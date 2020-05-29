@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -211,9 +210,9 @@ public class PlayerActivity extends AppCompatActivity {
                     .setImageBitmap(song.getBitmapLike(getApplicationContext()));
             ((TextView) findViewById(R.id.endTimer)).setText(convertMsToMinutes((int) song.getSongDuration()));
             ((ImageView) findViewById(R.id.likeButton)).setImageBitmap(song.getBitmapLike(getApplicationContext()));
+            ((TextView) findViewById(R.id.playlistSize)).setText(playlist.size() + " musics");
             updateLikeButton();
         }
-        Log.d("REFRESH", "Playing is " + playing);
         if (playing || (player != null && player.isPlaying()) ) {
             playing = true;
             playPauseButton.setImageResource(R.drawable.pause);
@@ -280,14 +279,11 @@ public class PlayerActivity extends AppCompatActivity {
             PlayerService.LocalBinder binder = (PlayerService.LocalBinder) service;
             player = binder.getService();
             serviceBound = true;
-
-            Toast.makeText(PlayerActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             serviceBound = false;
-            Toast.makeText(PlayerActivity.this, "Service Unbound", Toast.LENGTH_SHORT).show();
         }
     };
 
