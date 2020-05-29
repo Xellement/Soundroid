@@ -71,13 +71,14 @@ public class IndexService {
                 artist = (artist == null) ? "Unknown artist" : artist;
                 album = (album == null) ? "Unknown album" : album;
                 genre = (genre == null) ? "Unknown genre" : genre;
+                songNumber = (songNumber == null) ? 0 : Integer.parseInt(songNumber);
                 byte[] picture = mtr.getEmbeddedPicture();
 
                 String s = title + artist + album + genre + duration;
                 final String songHash = String.valueOf(s.hashCode());
 
                 Song song = new Song(title, Long.parseLong(duration), null, artist, album
-                        , songHash, file.getAbsolutePath(), picture, Integer.parseInt(songNumber));
+                        , songHash, file.getAbsolutePath(), picture, songNumber);
                 insertSong(song);
                 mtr.release();
             }
