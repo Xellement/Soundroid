@@ -10,13 +10,14 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-@Entity
+@Entity(indices = {@Index(value = {"hash"}, unique = true)})
 public class Song implements Serializable {
 
     @PrimaryKey(autoGenerate = true)

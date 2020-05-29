@@ -44,7 +44,7 @@ public interface SongDao {
     @Query("SELECT DISTINCT album_name FROM song")
     LiveData<List<String>> getAlbumsName();
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(Song song);
 
     @Update

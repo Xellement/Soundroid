@@ -37,9 +37,9 @@ public class IndexService {
 
     public void addMusicFilesFromRoot() {
         // TODO : stop deleting everything when starting indexation
-        playlistSongsJoinDao.deleteAll();
-        playlistDao.deleteAll();
-        songDao.deleteAll();
+//        playlistSongsJoinDao.deleteAll();
+//        playlistDao.deleteAll();
+//        songDao.deleteAll();
         Log.d("musicsList", "Starting indexation");
         musicsPlaylist = playlistDao.insert(new Playlist("Musics", 0));
         //TODO : find a method that isnt deprecated to get root path of external storage
@@ -86,7 +86,14 @@ public class IndexService {
     }
 
     private void insertSong(Song song) {
-        song.songId = songDao.insert(song);
+        long id = songDao.insert(song);
+        Log.d("songId", "id : " + id);
+        if (id < 0) {
+            return;
+        }
+        else {
+            song.songId = id;
+        }
         long artistsPlaylistId = playlistDao.insert(new Playlist(song.artistName, "artist_icon.png", 1, song.artistName));
         if (artistsPlaylistId <= 0) {
             artistsPlaylistId = playlistDao.getIdByName(song.artistName);

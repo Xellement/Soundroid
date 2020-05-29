@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "646e76cf971fbb7ee8a24ff7df20a54d",
+    "identityHash": "196a57829e68984b9984a42024596d1d",
     "entities": [
       {
         "tableName": "Song",
@@ -87,7 +87,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_Song_hash",
+            "unique": true,
+            "columnNames": [
+              "hash"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_Song_hash` ON `${TABLE_NAME}` (`hash`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -214,7 +223,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '646e76cf971fbb7ee8a24ff7df20a54d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '196a57829e68984b9984a42024596d1d')"
     ]
   }
 }
